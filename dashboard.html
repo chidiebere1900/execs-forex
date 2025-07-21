@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExecsForex - Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0d1b2a;
+      --bg-secondary: #1b263b;
+      --bg-gradient-from: #111827;
+      --bg-gradient-to: #1e3a8a;
+      --text-primary: #e0e7ff;
+      --text-secondary: #9ca3af;
+      --accent-primary: #00eaff;
+      --accent-secondary: #ff00ff;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --input-bg: #f9fafb;
+      --input-text: #000000;
+      --table-border: rgba(255, 255, 255, 0.1);
+      --table-header-bg: rgba(0, 229, 255, 0.1);
+    }
+    .light-theme {
+      --bg-primary: #f3f4f6;
+      --bg-secondary: #e5e7eb;
+      --bg-gradient-from: #e5e7eb;
+      --bg-gradient-to: #bfdbfe;
+      --text-primary: #1f2937;
+      --text-secondary: #4b5563;
+      --accent-primary: #0284c7;
+      --accent-secondary: #db2777;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(0, 0, 0, 0.1);
+      --input-bg: #e5e7eb;
+      --input-text: #1f2937;
+      --table-border: rgba(0, 0, 0, 0.1);
+      --table-header-bg: rgba(2, 132, 199, 0.1);
+    }
+    .container { width: 100%; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem; }
+    @media (min-width: 640px) { .container { max-width: 640px; } }
+    @media (min-width: 768px) { .container { max-width: 768px; } }
+    @media (min-width: 1024px) { .container { max-width: 1024px; } }
+    @media (min-width: 1280px) { .container { max-width: 1280px; } }
+    .bg-gradient-to-r { background-image: linear-gradient(to right, var(--bg-gradient-from), var(--bg-gradient-to)); }
+    .text-primary { color: var(--text-primary); }
+    .p-4 { padding: 1rem; }
+    .fixed { position: fixed; }
+    .w-full { width: 100%; }
+    .top-0 { top: 0; }
+    .z-20 { z-index: 20; }
+    .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+    .flex { display: flex; }
+    .justify-between { justify-content: space-between; }
+    .items-center { align-items: center; }
+    .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+    .font-bold { font-weight: 700; }
+    .space-x-6 > :not([hidden]) ~ :not([hidden]) { margin-left: 1.5rem; }
+    .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+    .py-20 { padding-top: 5rem; padding-bottom: 5rem; }
+    .text-center { text-align: center; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+    .mb-8 { margin-bottom: 2rem; }
+    .max-w-md { max-width: 28rem; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+    .px-8 { padding-left: 2rem; padding-right: 2rem; }
+    .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+    .rounded-full { border-radius: 9999px; }
+    .font-semibold { font-weight: 600; }
+    .bg-input { background-color: var(--input-bg); }
+    .text-input { color: var(--input-text); }
+    .border { border-width: 1px; }
+    .border-gray-300 { border-color: #d1d5db; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .p-2 { padding: 0.5rem; }
+    .w-full { width: 100%; }
+    .mb-4 { margin-bottom: 1rem; }
+    .text-red-400 { color: #f87171; }
+    .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .flex-col { flex-direction: column; }
+    .space-y-3 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.75rem; }
+    .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+    .bg-gray-800 { background-color: #1f2937; }
+    .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .hidden { display: none; }
+    .text-base { font-size: 1rem; line-height: 1.5rem; }
+    .bg-gray-900 { background-color: var(--bg-gray-900, #111827); }
+    .p-6 { padding: 1.5rem; }
+    .rounded-xl { border-radius: 0.75rem; }
+    .mt-6 { margin-top: 1.5rem; }
+    .text-left { text-align: left; }
+    .text-yellow-400 { color: #facc15; }
+    .text-green-400 { color: #34d399; }
+    .text-blue-400 { color: #60a5fa; }
+    .error-message { color: #f87171; font-size: 0.875rem; margin-top: 1rem; }
+    .tab { padding: 0.5rem 1rem; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s ease; }
+    .tab:hover { border-bottom-color: var(--accent-primary); }
+    .tab.active { border-bottom-color: var(--accent-primary); color: var(--accent-primary); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    #roi-chart { max-height: 200px; }
+    .table-container { overflow-x: auto; max-width: 100%; }
+    .table { width: 100%; border-collapse: collapse; table-layout: auto; }
+    .table th, .table td { border: 1px solid var(--table-border); padding: 0.5rem; text-align: left; min-width: 100px; word-break: break-all; white-space: normal; }
+    .table th { background: var(--table-header-bg); }
+    .wallet-address { cursor: pointer; position: relative; }
+    .wallet-address:hover::after {
+      content: attr(data-full-address);
+      position: absolute;
+      background: var(--bg-gray-900, #1f2937);
+      color: var(--text-primary);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      z-index: 10;
+      top: 100%;
+      left: 0;
+      white-space: nowrap;
+    }
+    .btc-price-widget { background: var(--table-header-bg); border: 1px solid var(--accent-primary); padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; }
+    .btn-primary { background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary)); color: #fff; padding: 0.75rem 1.5rem; border-radius: 9999px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(0, 229, 255, 0.5); }
+    .btn-secondary { background: linear-gradient(45deg, var(--accent-secondary), var(--accent-primary)); color: #fff; padding: 0.5rem 1rem; border-radius: 0.25rem; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .btn-secondary:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(0, 229, 255, 0.5); }
+    .theme-toggle { cursor: pointer; font-size: 1.25rem; }
+    .filter-container { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .filter-select { background: var(--input-bg); color: var(--input-text); border: 1px solid var(--card-border); padding: 0.5rem; border-radius: 0.25rem; }
+    @media (max-width: 640px) {
+      .table { display: block; }
+      .table thead { display: none; }
+      .table tbody, .table tr, .table td { display: block; width: 100%; }
+      .table tr { margin-bottom: 1rem; border-bottom: 1px solid var(--table-border); }
+      .table td { padding: 0.5rem; position: relative; }
+      .table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 0.25rem;
+        color: var(--accent-primary);
+      }
+    }
+
+    /* Custom Futuristic Styles */
+    body {
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+      background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+      color: var(--text-primary);
+    }
+    .dashboard-bg {
+      position: relative;
+      overflow: hidden;
+    }
+    #particles-js {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    .dashboard-content {
+      z-index: 1;
+      position: relative;
+    }
+    .form-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .form-card:hover {
+      box-shadow: 0 10px 20px rgba(0, 229, 255, 0.3);
+      border-color: var(--accent-primary);
+    }
+    .nav-link {
+      position: relative;
+      color: var(--text-primary);
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: var(--accent-primary);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    h1, h2, h3 {
+      font-family: 'Orbitron', sans-serif;
+    }
+    .glow {
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+    }
+    .input-field {
+      transition: all 0.3s ease;
+      border: 1px solid var(--card-border);
+      font-size: 0.75rem;
+      padding: 0.5rem;
+      caret-color: var(--accent-primary);
+      height: 1.75rem;
+      background: var(--input-bg);
+      color: var(--input-text);
+    }
+    .input-field:focus {
+      border: 2px solid var(--accent-primary);
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.7);
+      outline: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+    .progress-bar {
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      height: 4px;
+      transition: width 0.5s ease;
+    }
+    .wallet-box {
+      background: var(--table-header-bg);
+      border: 1px solid var(--accent-primary);
+      word-break: break-all;
+    }
+    .status-pending { color: #facc15; }
+    .status-processing { color: #60a5fa; }
+    .status-verified { color: #34d399; }
+    .bg-gray-900 { background-color: var(--bg-gray-900, #111827); }
+  </style>
+</head>
+<body>
+  <script type="text/javascript">
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+    function filledCell(cell) {
+      return cell !== '' && cell != null;
+    }
+    function loadFileData(filename) {
+      if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+        try {
+          var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+          var firstSheetName = workbook.SheetNames[0];
+          var worksheet = workbook.Sheets[firstSheetName];
+          var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+          var filteredData = jsonData.filter(row => row.some(filledCell));
+          var headerRowIndex = filteredData.findIndex((row, index) =>
+            row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+          );
+          if (headerRowIndex === -1 || headerRowIndex > 25) {
+            headerRowIndex = 0;
+          }
+          var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+          csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+          return csv;
+        } catch (e) {
+          console.error('Error loading file data:', e);
+          return "";
+        }
+      }
+      return gk_fileData[filename] || "";
+    }
+  </script>
+  <!-- Navigation -->
+  <nav class="bg-gradient-to-r text-primary p-4 fixed w-full top-0 z-20 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-3xl font-bold glow">ΞXΞCS FORΞX</h1>
+      <div class="flex items-center space-x-6">
+        <a href="index.html" class="text-lg nav-link">Home</a>
+        <a href="index.html#plans" class="text-lg nav-link">Plans</a>
+        <a href="index.html#about" class="text-lg nav-link">About</a>
+        <a href="index.html#contact" class="text-lg nav-link">Contact</a>
+        <span id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dashboard Section -->
+  <section id="dashboard" class="dashboard-bg text-primary py-20">
+    <div id="particles-js"></div>
+    <div class="container mx-auto px-4 dashboard-content">
+      <h2 class="text-4xl font-bold mb-6 glow text-center">Your Investment Dashboard</h2>
+      <div class="form-card p-6 rounded-xl max-w-md mx-auto">
+        <!-- Plan Info -->
+        <div class="mb-6 text-base text-red-400 text-center" id="plan-info"></div>
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-800 rounded-full h-1 mb-6">
+          <div id="progress-bar" class="progress-bar w-1/4"></div>
+        </div>
+        <!-- Initial Form -->
+        <div id="initial-form" class="flex flex-col space-y-3">
+          <div>
+            <label for="firstName" class="block text-base mb-1">First Name</label>
+            <input type="text" id="firstName" class="w-full rounded-lg bg-input text-input input-field" required>
+          </div>
+          <div>
+            <label for="lastName" class="block text-base mb-1">Last Name</label>
+            <input type="text" id="lastName" class="w-full rounded-lg bg-input text-input input-field" required>
+          </div>
+          <div>
+            <label for="email" class="block text-base mb-1">Email</label>
+            <input type="email" id="email" class="w-full rounded-lg bg-input text-input input-field" required>
+          </div>
+          <div>
+            <label for="investment" class="block text-base mb-1">Investment Amount (USD)</label>
+            <input type="number" id="investment" class="w-full rounded-lg bg-input text-input input-field" required min="1">
+          </div>
+          <p class="text-sm text-red-400 mb-4">Note: Payment is accepted only via Bitcoin (BTC). Wallet details will be provided after verification.</p>
+          <button id="submitBtn" class="btn-primary px-6 py-3 rounded-full font-semibold">Activate Plan</button>
+          <button id="show-login-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Log In</button>
+          <div id="loading" class="hidden text-base text-secondary mt-3 text-center">
+            <span class="animate-pulse">Processing...</span>
+          </div>
+          <div id="error-message" class="hidden error-message"></div>
+        </div>
+        <!-- Wallet Info (Hidden Initially) -->
+        <div id="wallet-info" class="hidden mt-6 p-4 bg-gray-900 rounded-lg text-left">
+          <h3 class="text-lg font-bold mb-2">Send Payment To:</h3>
+          <p class="text-sm text-secondary mb-2">Bitcoin Wallet Address:</p>
+          <p id="wallet-address" class="text-sm wallet-box p-2 rounded-lg">bc1q5autw3efgqu6y2nz7tz6ge3sacyd098xeqyqcp</p>
+          <p class="text-sm text-secondary mt-2">Please send the exact BTC amount to this address. You will receive a confirmation email once the payment is verified.</p>
+          <div id="transaction-status" class="text-sm mt-4">
+            <p>Transaction Status: <span id="tx-status" class="status-pending">Pending</span></p>
+            <p>Confirmations: <span id="tx-confirmations">0</span></p>
+          </div>
+        </div>
+        <!-- Login Form (Hidden Initially) -->
+        <div id="login-form" class="hidden flex flex-col space-y-3">
+          <h3 class="text-lg font-bold mb-2">Log In to Your Account</h3>
+          <div>
+            <label for="login-email" class="block text-base mb-1">Email</label>
+            <input type="email" id="login-email" class="w-full rounded-lg bg-input text-input input-field" required>
+          </div>
+          <div>
+            <label for="password" class="block text-base mb-1">Password</label>
+            <input type="password" id="password" class="w-full rounded-lg bg-input text-input input-field" required>
+          </div>
+          <div>
+            <label for="confirm-password" class="block text-base mb-1">Confirm Password</label>
+            <input type="password" id="confirm-password" class="w-full rounded-lg bg-input text-input input-field" required>
+          </div>
+          <button id="login-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Verify Password</button>
+          <div id="login-error" class="hidden error-message"></div>
+        </div>
+        <!-- 2FA Form (Hidden Initially) -->
+        <div id="2fa-form" class="hidden flex flex-col space-y-3">
+          <h3 class="text-lg font-bold mb-2">Two-Factor Authentication</h3>
+          <p class="text-sm text-secondary">A 6-digit code has been sent to your email.</p>
+          <div>
+            <label for="2fa-code" class="block text-base mb-1">Verification Code</label>
+            <input type="text" id="2fa-code" class="w-full rounded-lg bg-input text-input input-field" required maxlength="6">
+          </div>
+          <button id="2fa-verify-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Verify Code</button>
+          <button id="2fa-resend-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Resend Code</button>
+          <div id="2fa-error" class="hidden error-message"></div>
+        </div>
+        <!-- Tabbed Dashboard (Hidden Initially) -->
+        <div id="dashboard-tabs" class="hidden mt-6">
+          <div class="flex space-x-4 mb-4">
+            <div class="tab active" data-tab="portfolio">Portfolio Overview</div>
+            <div class="tab" data-tab="transactions">Transaction History</div>
+            <div class="tab" data-tab="roi">ROI Projections</div>
+            <div class="tab" data-tab="settings">Account Settings</div>
+          </div>
+          <div id="portfolio" class="tab-content active p-4 bg-gray-900 rounded-lg">
+            <h3 class="text-lg font-bold mb-2">Portfolio Overview</h3>
+            <p>Plan: <span id="portfolio-plan"></span></p>
+            <p>Investment Amount: <span id="portfolio-investment"></span></p>
+            <p>Current Balance: <span id="portfolio-balance"></span></p>
+            <div class="btc-price-widget">
+              <p>Current BTC Price: <span id="btc-price">$70,000</span></p>
+              <p>Last Updated: <span id="btc-price-timestamp"></span></p>
+              <button id="refresh-price-btn" class="btn-primary px-6 py-3 rounded-full font-semibold"
+>Refresh Price</button>
+            </div>
+          </div>
+          <div id="transactions" class="tab-content p-4 bg-gray-900 rounded-lg">
+            <h3 class="text-lg font-bold mb-2">Transaction History</h3>
+            <div class="filter-container">
+              <div>
+                <label for="sort-date" class="block text-sm mb-1">Sort by Date &nbsp</label>
+                <select id="sort-date" class="filter-select">
+                  <option value="desc">Newest First</option>
+                  <option value="asc">Oldest First</option>
+                </select>
+              </div>
+              <div>
+                <label for="filter-status" class="block text-sm mb-1">Filter by Status</label>
+                <select id="filter-status" class="filter-select">
+                  <option value="all">All</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Processing">Processing</option>
+                  <option value="Verified">Verified</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Wallet Address</th>
+                    <th>Amount (USD)</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="transaction-table"></tbody>
+              </table>
+            </div>
+            <button id="export-csv-btn" class="btn-primary px-6 py-3 rounded-full font-semibold"
+">Export as CSV</button>
+          </div>
+          <div id="roi" class="tab-content p-4 bg-gray-900 rounded-lg">
+            <h3 class="text-lg font-bold mb-2">Projected Returns</h3>
+            <canvas id="roi-chart"></canvas>
+          </div>
+          <div id="settings" class="tab-content p-4 bg-gray-900 rounded-lg">
+            <h3 class="text-lg font-bold mb-2">Account Settings</h3>
+            <div class="flex flex-col space-y-3">
+              <div>
+                <label for="settings-email" class="block text-base mb-1">Update Email</label>
+                <input type="email" id="settings-email" class="w-full rounded-lg bg-input text-input input-field">
+              </div>
+              <div>
+                <label for="settings-password" class="block text-base mb-1">New Password</label>
+                <input type="password" id="settings-password" class="w-full rounded-lg bg-input text-input input-field">
+              </div>
+              <div>
+                <label for="settings-confirm-password" class="block text-base mb-1">Confirm New Password</label>
+                <input type="password" id="settings-confirm-password" class="w-full rounded-lg bg-input text-input input-field">
+              </div>
+              <button id="update-settings-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Update Settings</button>
+              <button id="logout-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Logout</button>
+              <div class="mt-4">
+                <h4 class="text-base font-bold mb-2">Withdraw Funds</h4>
+                <div>
+                  <label for="withdrawal-amount" class="block text-base mb-1">Amount (USD)</label>
+                  <input type="number" id="withdrawal-amount" class="w-full rounded-lg bg-input text-input input-field" min="1">
+                </div>
+                <div>
+                  <label for="withdrawal-address" class="block text-base mb-1">Bitcoin Wallet Address</label>
+                  <input type="text" id="withdrawal-address" class="w-full rounded-lg bg-input text-input input-field">
+                </div>
+                <button id="withdrawal-btn" class="btn-primary mt-2 px-6 py-3 rounded-full font-semibold">Request Withdrawal</button>
+              </div>
+              <div id="settings-error" class="hidden error-message"></div>
+            </div>
+          </div>
+          <!-- Withdrawal 2FA Form (Hidden Initially) -->
+          <div id="withdrawal-2fa-form" class="hidden flex flex-col space-y-3">
+            <h3 class="text-lg font-bold mb-2">Verify Withdrawal</h3>
+            <p class="text-sm text-secondary">A 6-digit code has been sent to your email.</p>
+            <div>
+              <label for="withdrawal-2fa-code" class="block text-base mb-1">Verification Code</label>
+              <input type="text" id="withdrawal-2fa-code" class="w-full rounded-lg bg-input text-input input-field" required maxlength="6">
+            </div>
+            <button id="withdrawal-2fa-verify-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Verify Withdrawal</button>
+            <button id="withdrawal-2fa-resend-btn" class="btn-secondary mt-2">Resend Code</button>
+            <div id="withdrawal-2fa-error" class="hidden error-message"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r text-primary py-8">
+    <div class="container mx-auto text-center px-4">
+      <p class="text-lg">© 2025 ExecsForex. All rights reserved.</p>
+      <p class="mt-2">Domain: www.execsforex.com</p>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      document.addEventListener('DOMContentLoaded', () => {
+        // Check for Particles.js availability
+        if (!window.particlesJS) {
+          console.error('Particles.js not loaded');
+          showError('initial-form', 'error-message', 'Failed to load visual effects. Please refresh the page.');
+          return;
+        }
+
+        // Initialize Particles.js
+        try {
+          particlesJS('particles-js', {
+            particles: {
+              number: { value: 80, density: { enable: true, value_area: 800 } },
+              color: { value: document.documentElement.classList.contains('light-theme') ? '#0284c7' : '#00eaff' },
+              shape: { type: 'circle' },
+              opacity: { value: 0.5, random: true },
+              size: { value: 3, random: true },
+              line_linked: { enable: true, distance: 150, color: document.documentElement.classList.contains('light-theme') ? '#0284c7' : '#00eaff', opacity: 0.4, width: 2 },
+              move: { speed: 2, direction: 'none', random: true }
+            },
+            interactivity: {
+              detect_on: 'canvas',
+              events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
+              modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
+            }
+          });
+        } catch (e) {
+          console.error('Error initializing Particles.js:', e);
+          showError('initial-form', 'error-message', 'Failed to initialize visual effects. Functionality may be limited.');
+        }
+
+        // DOM elements
+        const urlParams = new URLSearchParams(window.location.search);
+        const plan = urlParams.get('plan');
+        const planInfo = document.getElementById('plan-info');
+        const investmentInput = document.getElementById('investment');
+        const progressBar = document.getElementById('progress-bar');
+        const submitBtn = document.getElementById('submitBtn');
+        const showLoginBtn = document.getElementById('show-login-btn');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('error-message');
+        const walletInfo = document.getElementById('wallet-info');
+        const walletAddress = document.getElementById('wallet-address');
+        const txStatus = document.getElementById('tx-status');
+        const txConfirmations = document.getElementById('tx-confirmations');
+        const initialForm = document.getElementById('initial-form');
+        const loginForm = document.getElementById('login-form');
+        const loginBtn = document.getElementById('login-btn');
+        const loginEmailInput = document.getElementById('login-email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const loginError = document.getElementById('login-error');
+        const twoFaForm = document.getElementById('2fa-form');
+        const twoFaCode = document.getElementById('2fa-code');
+        const twoFaVerifyBtn = document.getElementById('2fa-verify-btn');
+        const twoFaResendBtn = document.getElementById('2fa-resend-btn');
+        const twoFaError = document.getElementById('2fa-error');
+        const dashboardTabs = document.getElementById('dashboard-tabs');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const portfolioPlan = document.getElementById('portfolio-plan');
+        const portfolioInvestment = document.getElementById('portfolio-investment');
+        const portfolioBalance = document.getElementById('portfolio-balance');
+        const transactionTable = document.getElementById('transaction-table');
+        const sortDate = document.getElementById('sort-date');
+        const filterStatus = document.getElementById('filter-status');
+        const roiCalculator = document.getElementById('roi');
+        const settingsEmail = document.getElementById('settings-email');
+        const settingsPassword = document.getElementById('settings-password');
+        const settingsConfirmPassword = document.getElementById('settings-confirm-password');
+        const updateSettingsBtn = document.getElementById('update-settings-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const withdrawalBtn = document.getElementById('withdrawal-btn');
+        const withdrawalAmount = document.getElementById('withdrawal-amount');
+        const withdrawalAddress = document.getElementById('withdrawal-address');
+        const withdrawal2faForm = document.getElementById('withdrawal-2fa-form');
+        const withdrawal2faCode = document.getElementById('withdrawal-2fa-code');
+        const withdrawal2faVerifyBtn = document.getElementById('withdrawal-2fa-verify-btn');
+        const withdrawal2faResendBtn = document.getElementById('withdrawal-2fa-resend-btn');
+        const withdrawal2faError = document.getElementById('withdrawal-2fa-error');
+        const settingsError = document.getElementById('settings-error');
+        const refreshPriceBtn = document.getElementById('refresh-price-btn');
+        const btcPrice = document.getElementById('btc-price');
+        const btcPriceTimestamp = document.getElementById('btc-price-timestamp');
+        const exportCsvBtn = document.getElementById('export-csv-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        // Simulated user data (replace with backend in production)
+        let userData = {
+          email: null,
+          password: null,
+          plan: null,
+          investment: null,
+          activationDate: null,
+          transactions: []
+        };
+        let roiChart = null;
+        let simulated2faCode = null;
+
+        // Simulate an existing account for testing login
+        if (!userData.email) {
+          userData = {
+            email: 'john@example.com',
+            password: 'password123',
+            plan: plan || 'free',
+            investment: plan === 'premium' ? 1000000 : 10000,
+            activationDate: new Date(),
+            transactions: [{
+              date: new Date().toLocaleDateString(),
+              walletAddress: 'bc1q5autw3efgqu6y2nz7tz6ge3sacyd098xeqyqcp',
+              amount: (plan === 'premium' ? 1000000 : 10000).toLocaleString(),
+              status: 'Verified'
+            }]
+          };
+        }
+
+        // Helper function to show error messages
+        function showError(formId, errorId, message) {
+          const errorElement = document.getElementById(errorId);
+          if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.classList.remove('hidden');
+          } else {
+            console.warn(`Error element ${errorId} not found`);
+            alert(message);
+          }
+          const form = document.getElementById(formId);
+          if (form) {
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else {
+            console.warn(`Form ${formId} not found for scroll`);
+          }
+        }
+
+        // Check DOM elements
+        if (!planInfo || !investmentInput || !progressBar || !submitBtn || !showLoginBtn || !loading || !errorMessage || !walletInfo || !walletAddress || !txStatus || !txConfirmations || !initialForm || !loginForm || !loginBtn || !loginEmailInput || !passwordInput || !confirmPasswordInput || !loginError || !twoFaForm || !twoFaCode || !twoFaVerifyBtn || !twoFaResendBtn || !twoFaError || !dashboardTabs || !tabs.length || !tabContents.length || !portfolioPlan || !portfolioInvestment || !portfolioBalance || !transactionTable || !sortDate || !filterStatus || !roiCalculator || !settingsEmail || !settingsPassword || !settingsConfirmPassword || !updateSettingsBtn || !logoutBtn || !withdrawalBtn || !withdrawalAmount || !withdrawalAddress || !withdrawal2faForm || !withdrawal2faCode || !withdrawal2faVerifyBtn || !withdrawal2faResendBtn || !withdrawal2faError || !settingsError || !refreshPriceBtn || !btcPrice || !btcPriceTimestamp || !exportCsvBtn || !themeToggle) {
+          console.error('One or more DOM elements are missing');
+          showError('initial-form', 'error-message', 'Page elements failed to load. Please refresh the page.');
+          return;
+        }
+
+        // Theme toggle logic
+        function toggleTheme() {
+          try {
+            const isLightTheme = document.documentElement.classList.toggle('light-theme');
+            themeToggle.textContent = isLightTheme ? '🌞' : '🌙';
+            localStorage.setItem('theme', isLightTheme ? 'light' : 'dark');
+            if (window.particlesJS) {
+              particlesJS('particles-js', {
+                particles: {
+                  number: { value: 80, density: { enable: true, value_area: 800 } },
+                  color: { value: isLightTheme ? '#0284c7' : '#00eaff' },
+                  shape: { type: 'circle' },
+                  opacity: { value: 0.5, random: true },
+                  size: { value: 3, random: true },
+                  line_linked: { enable: true, distance: 150, color: isLightTheme ? '#0284c7' : '#00eaff', opacity: 0.4, width: 2 },
+                  move: { speed: 2, direction: 'none', random: true }
+                },
+                interactivity: {
+                  detect_on: 'canvas',
+                  events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
+                  modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
+                }
+              });
+            }
+            if (roiChart) {
+              roiChart.data.datasets[0].borderColor = isLightTheme ? '#0284c7' : '#00eaff';
+              roiChart.data.datasets[0].backgroundColor = isLightTheme ? 'rgba(2, 132, 199, 0.2)' : 'rgba(0, 229, 255, 0.2)';
+              roiChart.options.scales.y.ticks.color = isLightTheme ? '#1f2937' : '#e0e7ff';
+              roiChart.options.scales.x.ticks.color = isLightTheme ? '#1f2937' : '#e0e7ff';
+              roiChart.options.scales.y.grid.color = isLightTheme ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)';
+              roiChart.options.scales.x.grid.color = isLightTheme ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)';
+              roiChart.options.plugins.legend.labels.color = isLightTheme ? '#1f2937' : '#e0e7ff';
+              roiChart.update();
+            }
+          } catch (e) {
+            console.error('Error toggling theme:', e);
+            showError('initial-form', 'error-message', 'Failed to toggle theme.');
+          }
+        }
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'light') {
+          document.documentElement.classList.add('light-theme');
+          themeToggle.textContent = '🌞';
+        }
+
+        // Theme toggle event
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Plan setup
+        if (plan) {
+          if (plan === 'free') {
+            planInfo.textContent = 'Free Plan: Minimum Deposit $10,000, 10% Monthly ROI';
+            investmentInput.min = 10000;
+          } else if (plan === 'premium') {
+            planInfo.textContent = 'Premium Plan: Minimum Deposit $1,000,000, 20% Monthly ROI';
+            investmentInput.min = 1000000;
+          } else if (plan === 'cooperative') {
+            planInfo.textContent = 'Cooperative Plan: Minimum Deposit $1, 5% Monthly ROI (Processed in Batches)';
+            investmentInput.min = 1;
+          }
+        } else {
+          planInfo.textContent = 'No plan selected. Please choose a plan from the homepage.';
+          submitBtn.disabled = true;
+        }
+
+        // Progress bar animation
+        const inputs = document.querySelectorAll('#initial-form .input-field');
+        inputs.forEach(input => {
+          input.addEventListener('input', () => {
+            try {
+              const filledInputs = Array.from(inputs).filter(i => i.value).length;
+              const progress = (filledInputs / inputs.length) * 100;
+              progressBar.style.width = `${progress}%`;
+            } catch (e) {
+              console.error('Error updating progress bar:', e);
+              showError('initial-form', 'error-message', 'Error updating form progress. Please try again.');
+            }
+          });
+        });
+
+        // Calculate projected returns
+        function calculateROI(investment, plan) {
+          try {
+            if (isNaN(investment) || investment <= 0) {
+              throw new Error('Invalid investment amount');
+            }
+            const roiRates = { free: 0.10, premium: 0.20, cooperative: 0.05 };
+            const monthlyRate = roiRates[plan] || 0;
+            if (monthlyRate === 0) {
+              throw new Error('Invalid plan selected');
+            }
+            const months = [0, 1, 2, 3, 4, 5, 6];
+            return months.map(month => {
+              return investment * Math.pow(1 + monthlyRate, month);
+            });
+          } catch (e) {
+            console.error('Error calculating ROI:', e);
+            showError('dashboard-tabs', 'error-message', 'Error calculating projected returns.');
+            return [investment || 0, 0, 0, 0, 0, 0, 0];
+          }
+        }
+
+        // Calculate current balance based on activation date
+        function calculateCurrentBalance(investment, plan, activationDate) {
+          try {
+            const roiRates = { free: 0.10, premium: 0.20, cooperative: 0.05 };
+            const monthlyRate = roiRates[plan] || 0;
+            if (monthlyRate === 0) {
+              throw new Error('Invalid plan for balance calculation');
+            }
+            const now = new Date();
+            const monthsSinceActivation = (now - activationDate) / (1000 * 60 * 60 * 24 * 30);
+            return investment * Math.pow(1 + monthlyRate, Math.floor(monthsSinceActivation));
+          } catch (e) {
+            console.error('Error calculating current balance:', e);
+            return investment || 0;
+          }
+        }
+
+        // Initialize ROI chart
+        function initROIChart(investment, plan) {
+          try {
+            if (!window.Chart) {
+              throw new Error('Chart.js not loaded');
+            }
+            const ctx = document.getElementById('roi-chart')?.getContext('2d');
+            if (!ctx) {
+              throw new Error('Canvas context not found');
+            }
+            if (roiChart) {
+              roiChart.destroy();
+            }
+            const data = calculateROI(investment, plan);
+            roiChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: ['Initial', 'Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'],
+                datasets: [{
+                  label: 'Projected Balance (USD)',
+                  data: data,
+                  borderColor: document.documentElement.classList.contains('light-theme') ? '#0284c7' : '#00eaff',
+                  backgroundColor: document.documentElement.classList.contains('light-theme') ? 'rgba(2, 132, 199, 0.2)' : 'rgba(0, 229, 255, 0.2)',
+                  fill: true,
+                  tension: 0.3
+                }]
+              },
+              options: {
+                responsive: true,
+                scales: {
+                  y: {
+                    beginAtZero: false,
+                    ticks: {
+                      callback: function(value) {
+                        return '$' + value.toLocaleString();
+                      },
+                      color: document.documentElement.classList.contains('light-theme') ? '#1f2937' : '#e0e7ff'
+                    },
+                    grid: { color: document.documentElement.classList.contains('light-theme') ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)' }
+                  },
+                  x: {
+                    ticks: { color: document.documentElement.classList.contains('light-theme') ? '#1f2937' : '#e0e7ff' },
+                    grid: { color: document.documentElement.classList.contains('light-theme') ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)' }
+                  }
+                },
+                plugins: {
+                  legend: { labels: { color: document.documentElement.classList.contains('light-theme') ? '#1f2937' : '#e0e7ff' } },
+                  tooltip: {
+                    callbacks: {
+                      label: function(context) {
+                        return '$' + context.parsed.y.toLocaleString();
+                      }
+                    }
+                  }
+                }
+              }
+            });
+          } catch (e) {
+            console.error('Error initializing ROI chart:', e);
+            showError('dashboard-tabs', 'error-message', 'Failed to display projected returns chart.');
+          }
+        }
+
+        // Simulate BTC price fetch
+        function updateBtcPrice() {
+          try {
+            const basePrice = 70000;
+            const fluctuation = (Math.random() - 0.5) * 1000;
+            const newPrice = basePrice + fluctuation;
+            btcPrice.textContent = `$${newPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            btcPriceTimestamp.textContent = new Date().toLocaleString();
+          } catch (e) {
+            console.error('Error updating BTC price:', e);
+            showError('portfolio', 'error-message', 'Failed to update BTC price.');
+          }
+        }
+
+        // Initialize BTC price
+        updateBtcPrice();
+
+        // Export transaction history as CSV
+        function exportToCsv() {
+          try {
+            const headers = ['Date', 'Wallet Address', 'Amount (USD)', 'Status'];
+            const rows = userData.transactions.map(tx => [
+              tx.date,
+              tx.walletAddress,
+              tx.amount,
+              tx.status
+            ]);
+            const csvContent = [
+              headers.join(','),
+              ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+            ].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'transaction_history.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+          } catch (e) {
+            console.error('Error exporting CSV:', e);
+            showError('transactions', 'error-message', 'Failed to export transaction history.');
+          }
+        }
+
+        // Simulate 2FA code generation
+        function generate2faCode() {
+          return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        // Simulate sending 2FA code
+        function send2faCode(email, context = 'login') {
+          try {
+            simulated2faCode = generate2faCode();
+            console.log(`Simulated 2FA code for ${context}: ${simulated2faCode} sent to ${email}`);
+            alert(`A 6-digit code has been sent to ${email}. (Simulated code: ${simulated2faCode})`);
+          } catch (e) {
+            console.error(`Error sending 2FA code for ${context}:`, e);
+            showError(context === 'login' ? '2fa-form' : 'withdrawal-2fa-form', context === 'login' ? '2fa-error' : 'withdrawal-2fa-error', `Failed to send ${context} verification code.`);
+          }
+        }
+
+        // Render transaction table
+        function renderTransactionTable(transactions) {
+          try {
+            const shortAddress = walletAddress.textContent.slice(0, 8) + '...' + walletAddress.textContent.slice(-8);
+            transactionTable.innerHTML = transactions.map(tx => `
+              <tr>
+                <td data-label="Date">${tx.date}</td>
+                <td data-label="Wallet Address"><span class="wallet-address" data-full-address="${tx.walletAddress}" onclick="navigator.clipboard.writeText('${tx.walletAddress}'); alert('Wallet address copied to clipboard!')">${shortAddress}</span></td>
+                <td data-label="Amount (USD)">$${tx.amount}</td>
+                <td data-label="Status">${tx.status}</td>
+              </tr>
+            `).join('');
+          } catch (e) {
+            console.error('Error rendering transaction table:', e);
+            showError('transactions', 'error-message', 'Failed to render transaction history.');
+          }
+        }
+
+        // Filter and sort transactions
+        function filterAndSortTransactions() {
+          try {
+            const sortOrder = sortDate.value;
+            const statusFilter = filterStatus.value;
+            let filteredTransactions = [...userData.transactions];
+            if (statusFilter !== 'all') {
+              filteredTransactions = filteredTransactions.filter(tx => tx.status === statusFilter);
+            }
+            filteredTransactions.sort((a, b) => {
+              const dateA = new Date(a.date.split('/').reverse().join('-'));
+              const dateB = new Date(b.date.split('/').reverse().join('-'));
+              return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+            });
+            renderTransactionTable(filteredTransactions);
+          } catch (e) {
+            console.error('Error filtering/sorting transactions:', e);
+            showError('transactions', 'error-message', 'Failed to filter/sort transactions.');
+          }
+        }
+
+        // Simulated transaction status update
+        function simulateTransactionStatus(investment, plan, email, callback) {
+          try {
+            setTimeout(() => {
+              if (txStatus && txConfirmations) {
+                txStatus.textContent = 'Processing';
+                txStatus.className = 'status-processing';
+                txConfirmations.textContent = '1';
+                if (walletInfo) walletInfo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
+            }, 5000);
+            setTimeout(() => {
+              if (txStatus && txConfirmations) {
+                txStatus.textContent = 'Processing';
+                txStatus.className = 'status-processing';
+                txConfirmations.textContent = '2';
+              }
+            }, 8000);
+            setTimeout(() => {
+              if (txStatus && txConfirmations && initialForm && loginForm) {
+                txStatus.textContent = 'Verified';
+                txStatus.className = 'status-verified';
+                txConfirmations.textContent = '3';
+                initialForm.classList.add('hidden');
+                walletInfo.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                loginForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                userData.email = email;
+                userData.plan = plan;
+                userData.investment = investment;
+                userData.activationDate = new Date();
+                userData.transactions = [{
+                  date: new Date().toLocaleDateString(),
+                  walletAddress: walletAddress.textContent,
+                  amount: investment.toLocaleString(),
+                  status: 'Verified'
+                }];
+                callback();
+                alert('Payment verified! Please set up your account to access the dashboard.');
+              }
+            }, 10000);
+          } catch (e) {
+            console.error('Error in transaction status simulation:', e);
+            showError('initial-form', 'error-message', 'Error updating transaction status.');
+          }
+        }
+
+        // Tab switching logic
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            try {
+              tabs.forEach(t => t.classList.remove('active'));
+              tabContents.forEach(c => c.classList.remove('active'));
+              tab.classList.add('active');
+              document.getElementById(tab.dataset.tab).classList.add('active');
+              if (tab.dataset.tab === 'transactions') {
+                filterAndSortTransactions();
+              }
+            } catch (e) {
+              console.error('Error switching tabs:', e);
+              showError('dashboard-tabs', 'error-message', 'Error switching tabs.');
+            }
+          });
+        });
+
+        // Show login form
+        showLoginBtn.addEventListener('click', () => {
+          try {
+            initialForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            loginForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } catch (e) {
+            console.error('Error showing login form:', e);
+            showError('initial-form', 'error-message', 'Error accessing login form.');
+          }
+        });
+
+        // Form submission handler
+        submitBtn.addEventListener('click', () => {
+          try {
+            const firstName = document.getElementById('firstName')?.value.trim();
+            const lastName = document.getElementById('lastName')?.value.trim();
+            const email = document.getElementById('email')?.value.trim();
+            const investment = parseFloat(document.getElementById('investment')?.value);
+
+            if (!firstName || !lastName || !email || isNaN(investment) || investment <= 0) {
+              alert('Please fill in all fields with valid values.');
+              return;
+            }
+
+            if (plan === 'free' && investment < 10000) {
+              alert('Investment amount must be at least $10,000 for the Free Plan.');
+              return;
+            } else if (plan === 'premium' && investment < 1000000) {
+              alert('Investment amount must be at least $1,000,000 for the Premium Plan.');
+              return;
+            } else if (plan === 'cooperative' && investment < 1) {
+              alert('Investment amount must be at least $1 for the Cooperative Plan.');
+              return;
+            }
+
+            submitBtn.classList.add('hidden');
+            showLoginBtn.classList.add('hidden');
+            loading.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+
+            setTimeout(() => {
+              loading.classList.add('hidden');
+              submitBtn.classList.remove('hidden');
+              showLoginBtn.classList.remove('hidden');
+              alert(`A verification email has been sent to ${email}. Please verify your email to proceed.`);
+
+              walletAddress.textContent = 'bc1q5autw3efgqu6y2nz7tz6ge3sacyd098xeqyqcp';
+              walletInfo.classList.remove('hidden');
+              walletInfo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+              simulateTransactionStatus(investment, plan, email, () => {
+                setTimeout(() => {
+                  alert('Email verified! Please set up your account.');
+                }, 2000);
+              });
+            }, 2000);
+          } catch (e) {
+            console.error('Error in form submission:', e);
+            showError('initial-form', 'error-message', 'An error occurred during submission. Please try again.');
+            loading.classList.add('hidden');
+            submitBtn.classList.remove('hidden');
+            showLoginBtn.classList.remove('hidden');
+          }
+        });
+
+        // Login handler
+        loginBtn.addEventListener('click', () => {
+          try {
+            console.log('Login button clicked');
+            if (!loginEmailInput || !passwordInput || !confirmPasswordInput) {
+              console.error('Login form inputs missing:', { loginEmailInput, passwordInput, confirmPasswordInput });
+              showError('login-form', 'login-error', 'Login form elements are missing. Please refresh the page.');
+              return;
+            }
+
+            const loginEmail = loginEmailInput.value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            console.log('Login input values:', { loginEmail, password, confirmPassword });
+
+            if (!loginEmail || !password || !confirmPassword) {
+              console.warn('Login fields incomplete');
+              showError('login-form', 'login-error', 'Please fill in all fields.');
+              return;
+            }
+
+            if (loginEmail !== userData.email) {
+              console.warn('Email mismatch:', { loginEmail, userEmail: userData.email });
+              showError('login-form', 'login-error', 'Email does not match the one used for payment verification.');
+              return;
+            }
+
+            if (password !== confirmPassword) {
+              console.warn('Passwords do not match');
+              showError('login-form', 'login-error', 'Passwords do not match.');
+              return;
+            }
+
+            if (password !== userData.password) {
+              console.warn('Incorrect password');
+              showError('login-form', 'login-error', 'Incorrect password.');
+              return;
+            }
+
+            if (!twoFaForm) {
+              console.error('2FA form element missing');
+              showError('login-form', 'login-error', '2FA form is unavailable. Please refresh the page.');
+              return;
+            }
+
+            userData.password = password; // In production, hash the password
+            loginForm.classList.add('hidden');
+            twoFaForm.classList.remove('hidden');
+            twoFaForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            send2faCode(loginEmail, 'login');
+            console.log('Login successful, proceeding to 2FA');
+          } catch (e) {
+            console.error('Error in login handler:', e);
+            showError('login-form', 'login-error', 'An error occurred during login. Please try again.');
+          }
+        });
+
+        // 2FA verification handler
+        twoFaVerifyBtn.addEventListener('click', () => {
+          try {
+            const code = twoFaCode.value.trim();
+            if (!code || code.length !== 6 || code !== simulated2faCode) {
+              showError('2fa-form', '2fa-error', 'Invalid or incorrect verification code.');
+              return;
+            }
+
+            twoFaForm.classList.add('hidden');
+            dashboardTabs.classList.remove('hidden');
+            dashboardTabs.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            portfolioPlan.textContent = userData.plan.charAt(0).toUpperCase() + userData.plan.slice(1);
+            portfolioInvestment.textContent = `$${userData.investment.toLocaleString()}`;
+            portfolioBalance.textContent = `$${calculateCurrentBalance(userData.investment, userData.plan, userData.activationDate).toLocaleString()}`;
+            renderTransactionTable(userData.transactions);
+            initROIChart(userData.investment, userData.plan);
+            alert('2FA verified! Welcome to your dashboard.');
+          } catch (e) {
+            console.error('Error in 2FA verification:', e);
+            showError('2fa-form', '2fa-error', 'An error occurred during 2FA verification. Please try again.');
+          }
+        });
+
+        // Resend 2FA code
+        twoFaResendBtn.addEventListener('click', () => {
+          try {
+            send2faCode(userData.email, 'login');
+          } catch (e) {
+            console.error('Error resending 2FA code:', e);
+            showError('2fa-form', '2fa-error', 'Failed to resend verification code.');
+          }
+        });
+
+        // Withdrawal handler
+        withdrawalBtn.addEventListener('click', () => {
+          try {
+            const amount = parseFloat(withdrawalAmount.value);
+            const address = withdrawalAddress.value.trim();
+
+            if (isNaN(amount) || amount <= 0) {
+              showError('settings', 'settings-error', 'Please enter a valid withdrawal amount.');
+              return;
+            }
+
+            if (!address || !address.startsWith('bc1')) {
+              showError('settings', 'settings-error', 'Please enter a valid Bitcoin wallet address.');
+              return;
+            }
+
+            withdrawalBtn.classList.add('hidden');
+            withdrawal2faForm.classList.remove('hidden');
+            withdrawal2faForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            send2faCode(userData.email, 'withdrawal');
+            userData.pendingWithdrawal = { amount, address };
+          } catch (e) {
+            console.error('Error in withdrawal request:', e);
+            showError('settings', 'settings-error', 'An error occurred during withdrawal request. Please try again.');
+          }
+        });
+
+        // Withdrawal 2FA verification handler
+        withdrawal2faVerifyBtn.addEventListener('click', () => {
+          try {
+            const code = withdrawal2faCode.value.trim();
+            if (!code || code.length !== 6 || code !== simulated2faCode) {
+              showError('withdrawal-2fa-form', 'withdrawal-2fa-error', 'Invalid or incorrect verification code.');
+              return;
+            }
+
+            withdrawal2faForm.classList.add('hidden');
+            withdrawalBtn.classList.remove('hidden');
+            userData.transactions.push({
+              date: new Date().toLocaleDateString(),
+              walletAddress: userData.pendingWithdrawal.address,
+              amount: userData.pendingWithdrawal.amount.toLocaleString(),
+              status: 'Pending'
+            });
+            withdrawalAmount.value = '';
+            withdrawalAddress.value = '';
+            delete userData.pendingWithdrawal;
+            alert('Withdrawal request submitted! It will be processed within 3-5 business days.');
+            tabs.forEach(t => t.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            document.querySelector('[data-tab="transactions"]').classList.add('active');
+            document.getElementById('transactions').classList.add('active');
+            filterAndSortTransactions();
+          } catch (e) {
+            console.error('Error in withdrawal 2FA verification:', e);
+            showError('withdrawal-2fa-form', 'withdrawal-2fa-error', 'An error occurred during withdrawal verification. Please try again.');
+          }
+        });
+
+        // Resend withdrawal 2FA code
+        withdrawal2faResendBtn.addEventListener('click', () => {
+          try {
+            send2faCode(userData.email, 'withdrawal');
+          } catch (e) {
+            console.error('Error resending withdrawal 2FA code:', e);
+            showError('withdrawal-2fa-form', 'withdrawal-2fa-error', 'Failed to resend withdrawal verification code.');
+          }
+        });
+
+        // Filter and sort event listeners
+        sortDate.addEventListener('change', filterAndSortTransactions);
+        filterStatus.addEventListener('change', filterAndSortTransactions);
+
+        // Settings update handler
+        updateSettingsBtn.addEventListener('click', () => {
+          try {
+            const newEmail = settingsEmail.value.trim();
+            const newPassword = settingsPassword.value;
+            const confirmNewPassword = settingsConfirmPassword.value;
+
+            if (!newEmail && !newPassword && !confirmNewPassword) {
+              showError('settings', 'settings-error', 'Please fill in at least one field to update.');
+              return;
+            }
+
+            if (newEmail && newEmail !== userData.email) {
+              userData.email = newEmail;
+              settingsEmail.value = '';
+              alert('Email updated successfully.');
+            }
+
+            if (newPassword && newPassword !== confirmNewPassword) {
+              showError('settings', 'settings-error', 'Passwords do not match.');
+              return;
+            }
+
+            if (newPassword) {
+              userData.password = newPassword; // In production, hash the password
+              settingsPassword.value = '';
+              settingsConfirmPassword.value = '';
+              alert('Password updated successfully.');
+            }
+          } catch (e) {
+            console.error('Error updating settings:', e);
+            showError('settings', 'settings-error', 'An error occurred while updating settings. Please try again.');
+          }
+        });
+
+        // Logout handler
+        logoutBtn.addEventListener('click', () => {
+          try {
+            userData = { email: null, password: null, plan: null, investment: null, activationDate: null, transactions: [] };
+            dashboardTabs.classList.add('hidden');
+            initialForm.classList.remove('hidden');
+            inputs.forEach(input => input.value = '');
+            progressBar.style.width = '0%';
+            initialForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            alert('Logged out successfully.');
+          } catch (e) {
+            console.error('Error during logout:', e);
+            showError('settings', 'settings-error', 'An error occurred during logout. Please try again.');
+          }
+        });
+
+        // Refresh BTC price handler
+        refreshPriceBtn.addEventListener('click', () => {
+          try {
+            updateBtcPrice();
+            alert('BTC price refreshed.');
+          } catch (e) {
+            console.error('Error refreshing BTC price:', e);
+            showError('portfolio', 'error-message', 'Failed to refresh BTC price.');
+          }
+        });
+
+        // Export CSV handler
+        exportCsvBtn.addEventListener('click', () => {
+          try {
+            if (userData.transactions.length === 0) {
+              showError('transactions', 'error-message', 'No transactions available to export.');
+              return;
+            }
+            exportToCsv();
+            alert('Transaction history exported as CSV.');
+          } catch (e) {
+            console.error('Error exporting CSV:', e);
+            showError('transactions', 'error-message', 'Failed to export transaction history.');
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
