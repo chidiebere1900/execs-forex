@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ExecsForex - Future of Investing</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
     :root {
       --bg-primary: #0d1b2a;
@@ -88,7 +90,7 @@
     .bg-gradient-to-b { background-image: linear-gradient(to bottom, var(--bg-gradient-from), var(--bg-gradient-to)); }
     .max-w-3xl { max-width: 48rem; }
     .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
-    .mt-2 { margin-top: 0.5rem; }
+    .mt-2 { margin-bottom: 0.5rem; }
     .hidden { display: none; }
 
     /* Custom Futuristic Styles */
@@ -199,6 +201,106 @@
         transform: none;
       }
     }
+    .chatbot-container {
+      position: fixed !important;
+      bottom: 20px !important;
+      right: 20px !important;
+      z-index: 10000 !important;
+      display: block !important;
+    }
+    .chatbot-toggle {
+      background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary)) !important;
+      color: #fff !important;
+      width: 60px !important;
+      height: 60px !important;
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.5) !important;
+      transition: transform 0.3s ease !important;
+      font-size: 24px !important;
+    }
+    .chatbot-toggle:hover {
+      transform: scale(1.1) !important;
+    }
+    .chatbot-window {
+      width: 320px;
+      height: 400px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      overflow: hidden;
+      display: none;
+      flex-direction: column;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    .chatbot-window.open {
+      display: flex;
+    }
+    .chatbot-header {
+      background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+      color: #fff;
+      padding: 10px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.25rem;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+    }
+    .chatbot-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      color: var(--text-primary);
+    }
+    .chatbot-message {
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+    }
+    .chatbot-message.user {
+      background: var(--accent-primary);
+      color: #fff;
+      margin-left: 20%;
+      text-align: right;
+    }
+    .chatbot-message.bot {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      margin-right: 20%;
+    }
+    .chatbot-input {
+      display: flex;
+      padding: 10px;
+      background: var(--card-bg);
+    }
+    .chatbot-input input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      background: var(--input-bg);
+      color: var(--input-text);
+      font-family: 'Inter', sans-serif;
+    }
+    .chatbot-input button {
+      margin-left: 8px;
+      padding: 8px 12px;
+      background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .chatbot-input button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    }
   </style>
 </head>
 <body>
@@ -238,13 +340,13 @@
   <!-- Navigation -->
   <nav class="bg-gradient-to-r text-primary p-4 fixed w-full top-0 z-20 shadow-lg">
     <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-3xl font-bold glow">ΞXΞCS FORΞX</h1>
+      <h1 class="text-3xl font-bold glow text-contrast">ΞXΞCS FORΞX</h1>
       <div class="flex items-center space-x-6">
-        <a href="#home" class="text-lg nav-link">Home</a>
-        <a href="#plans" class="text-lg nav-link">Plans</a>
-        <a href="#about" class="text-lg nav-link">About</a>
-        <a href="#contact" class="text-lg nav-link">Contact</a>
-        <a href="dashboard.html" class="text-lg nav-link hidden" id="dashboard-link">Dashboard</a>
+        <a href="#home" class="text-lg nav-link text-contrast">Home</a>
+        <a href="#plans" class="text-lg nav-link text-contrast">Plans</a>
+        <a href="#about" class="text-lg nav-link text-contrast">About</a>
+        <a href="#contact" class="text-lg nav-link text-contrast">Contact</a>
+        <a href="dashboard.html" class="text-lg nav-link text-contrast" id="dashboard-link">Dashboard</a>
         <span id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</span>
       </div>
     </div>
@@ -263,13 +365,13 @@
   <!-- Investment Plans -->
   <section id="plans" class="py-20">
     <div class="container mx-auto px-4">
-      <h2 class="text-4xl font-bold text-center mb-16 glow">Investment Plans</h2>
+      <h2 class="text-4xl font-bold text-center mb-16 glow">Investment Plans ⏬</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Free Plan -->
         <div class="plan-card p-8 rounded-xl text-center">
           <h3 class="text-2xl font-semibold mb-4 glow">Free Plan</h3>
           <p class="text-gray-300 mb-6">Begin your journey with our expert trading team.</p>
-          <p class="text-xl font-bold mb-4">Minimum Deposit: $10,000</p>
+          <p class="text-xl font-bold mb-4">Minimum Deposit: $80,000</p>
           <p class="text-lg mb-4">Monthly ROI: 10%</p>
           <p class="text-sm text-orange-400 mb-6 risk-notice">Risk Warning: Trading involves a 20% risk of capital loss.</p>
           <a href="dashboard.html?plan=free" class="btn-primary px-6 py-3 rounded-full font-semibold">Join Free Plan</a>
@@ -313,6 +415,9 @@
     </div>
   </section>
 
+  <!-- Chatbot -->
+  <div id="chatbot-root" class="chatbot-container"></div>
+
   <!-- Footer -->
   <footer class="bg-gradient-to-r text-primary py-8">
     <div class="container mx-auto text-center px-4">
@@ -323,24 +428,24 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Check for Particles.js availability
+      console.log("DOMContentLoaded: Initializing page elements"); // Debug log
       if (!window.particlesJS) {
         console.error('Particles.js not loaded');
         alert('Failed to load visual effects. Please refresh the page.');
         return;
       }
 
-      // Initialize Particles.js
       function initParticles() {
         try {
+          const isLightTheme = document.documentElement.classList.contains('light-theme');
           particlesJS('particles-js', {
             particles: {
               number: { value: 80, density: { enable: true, value_area: 800 } },
-              color: { value: document.documentElement.classList.contains('light-theme') ? '#0284c7' : '#00eaff' },
+              color: { value: isLightTheme ? '#0284c7' : '#00eaff' },
               shape: { type: 'circle' },
               opacity: { value: 0.5, random: true },
               size: { value: 3, random: true },
-              line_linked: { enable: true, distance: 150, color: document.documentElement.classList.contains('light-theme') ? '#0284c7' : '#00eaff', opacity: 0.4, width: 2 },
+              line_linked: { enable: true, distance: 150, color: isLightTheme ? '#0284c7' : '#00eaff', opacity: 0.4, width: 2 },
               move: { speed: 2, direction: 'none', random: true }
             },
             interactivity: {
@@ -349,13 +454,13 @@
               modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
             }
           });
+          console.log("Particles.js initialized"); // Debug log
         } catch (e) {
           console.error('Error initializing Particles.js:', e);
           alert('Failed to initialize visual effects. Functionality may be limited.');
         }
       }
 
-      // Theme toggle logic
       const themeToggle = document.getElementById('theme-toggle');
       function toggleTheme() {
         try {
@@ -363,37 +468,198 @@
           themeToggle.textContent = isLightTheme ? '🌞' : '🌙';
           localStorage.setItem('theme', isLightTheme ? 'light' : 'dark');
           initParticles();
+          console.log("Theme toggled to:", isLightTheme ? 'light' : 'dark'); // Debug log
         } catch (e) {
           console.error('Error toggling theme:', e);
           alert('Failed to toggle theme.');
         }
       }
 
-      // Load saved theme
       if (localStorage.getItem('theme') === 'light') {
         document.documentElement.classList.add('light-theme');
-        themeToggle.textContent = '🌞';
+        if (themeToggle) themeToggle.textContent = '🌞';
       }
 
-      // Theme toggle event
-      themeToggle.addEventListener('click', toggleTheme);
+      if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+      }
 
-      // Show Dashboard link if logged in (simulated)
       const dashboardLink = document.getElementById('dashboard-link');
-      if (localStorage.getItem('userData')) {
+      if (dashboardLink && localStorage.getItem('userData')) {
         dashboardLink.classList.remove('hidden');
       }
 
-      // Cooperative plan notification
       function showBatchNotification() {
         alert("Thank you for choosing the Cooperative Plan! Your investment will be processed in batches. You will be notified when your batch is filled and trading begins.");
       }
 
-      // Attach notification to cooperative plan link
-      document.querySelector('a[href="dashboard.html?plan=cooperative"]').addEventListener('click', showBatchNotification);
+      const cooperativeLink = document.querySelector('a[href="dashboard.html?plan=cooperative"]');
+      if (cooperativeLink) {
+        cooperativeLink.addEventListener('click', showBatchNotification);
+      }
 
-      // Initialize Particles.js
       initParticles();
+    });
+  </script>
+
+  <script>
+    "use strict";
+
+    function Chatbot() {
+      console.log("Chatbot: Initializing component"); // Debug log
+      const [isOpen, setIsOpen] = React.useState(false);
+      const [messages, setMessages] = React.useState([{
+        sender: 'bot',
+        text: 'Welcome to the future of investing! I’m the Execs Forex AI Assistant, your guide to navigating wealth creation. Ask me about our plans, forex trading, or anything else—I’m powered by cosmic curiosity!'
+      }]);
+      const [input, setInput] = React.useState('');
+
+      const knowledgeBase = {
+        company: {
+          keywords: ['execs forex', 'company', 'about', 'who are you'],
+          response: 'Execs Forex is your portal to futuristic wealth creation, blending cutting-edge trading strategies with expert traders. We offer three plans—Free, Premium, and Cooperative—to suit every investor’s ambitions. Think of us as your financial spaceship, navigating the volatile cosmos of forex markets!'
+        },
+        plans: {
+          keywords: ['plans', 'investment plans', 'options', 'free plan', 'premium plan', 'cooperative plan'],
+          response: 'We’ve got three stellar investment plans:\n- **Free Plan**: $80,000 minimum, 10% monthly ROI, 20% risk of capital loss.\n- **Premium Plan**: $1,000,000 minimum, 20% monthly ROI, 20% risk of capital loss.\n- **Cooperative Plan**: Just $1 to start, 5% monthly ROI, 20% risk of capital loss. All plans are subject to forex market risks—consult a financial advisor to chart your course!'
+        },
+        cooperative: {
+          keywords: ['cooperative plan', 'batch', 'cooperative'],
+          response: 'The Cooperative Plan is our most accessible option—start with just $1 and aim for a 5% monthly ROI! Investments are pooled in batches, and you’ll get a ping when your batch is active and trading begins. Be aware of the 20% risk of capital loss, and maybe check with a financial advisor before diving in.'
+        },
+        risks: {
+          keywords: ['risks', 'risk', 'safety', 'loss'],
+          response: 'Forex trading is like navigating an asteroid field—exciting but risky! All Execs Forex plans carry a 20% risk of capital loss due to market volatility. Our traders use advanced strategies to minimize this, but we recommend consulting a financial advisor to ensure your investments align with your risk tolerance.'
+        },
+        support: {
+          keywords: ['contact', 'support', 'help', 'reach out'],
+          response: 'Need a guide through the financial galaxy? Our support team is at support@execsforex.com, ready to answer your questions and steer you toward success!'
+        },
+        forex: {
+          keywords: ['forex', 'trading', 'market', 'currency'],
+          response: 'Forex trading involves buying and selling currencies on the global market to profit from exchange rate fluctuations. It’s fast-paced and high-stakes, with potential for big wins but also risks—like a 20% chance of capital loss in our plans. Execs Forex uses expert traders and advanced algorithms to optimize returns. Curious about specifics? Ask away!'
+        },
+        dashboard: {
+          keywords: ['dashboard', 'account', 'login'],
+          response: 'The dashboard is your command center for tracking investments and plan details. Head to dashboard to access it—if you’re logged in, it’s visible in the navigation. Not seeing it? You might need to sign up or log in first!'
+        }
+      };
+
+      function generateResponse(userInput) {
+        console.log("Chatbot: Generating response for input:", userInput); // Debug log
+        const normalizedInput = userInput.toLowerCase().trim();
+        for (const [key, topic] of Object.entries(knowledgeBase)) {
+          if (topic.keywords.some(keyword => normalizedInput.includes(keyword))) {
+            return topic.response;
+          }
+        }
+        if (normalizedInput.includes('why') || normalizedInput.includes('how') || normalizedInput.includes('pourquoi') || normalizedInput.includes('comment')) {
+          return "Hmm, that's an intriguing question! Could you clarify or give me a bit more context? I’m here to break down anything about Execs Forex, forex trading, or even the wild world of finance. For now, did you know our Cooperative Plan lets you start with just $1? Pretty out-of-this-world, right?";
+        }
+        return "I’m picking up some static on that question—mind rephrasing? I can answer anything about Execs Forex, our plans, or forex trading. Maybe ask about the stars we’re reaching for with our 20% Premium Plan ROI?";
+      }
+
+      function handleSend() {
+        if (!input.trim()) return;
+        console.log("Chatbot: Sending message:", input); // Debug log
+        const userMessage = { sender: 'user', text: input };
+        setMessages(prevMessages => [...prevMessages, userMessage]);
+        const responseText = generateResponse(input);
+        setMessages(prevMessages => [...prevMessages, { sender: 'bot', text: responseText }]);
+        setInput('');
+      }
+
+      function handleKeyPress(e) {
+        if (e.key === 'Enter') handleSend();
+      }
+
+      React.useEffect(() => {
+        const messagesDiv = document.querySelector('.chatbot-messages');
+        if (messagesDiv) {
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+          console.log("Chatbot: Messages div found, scrolled to bottom"); // Debug log
+        } else {
+          console.warn("Chatbot: Messages div not found"); // Debug log
+        }
+      }, [messages]);
+
+      console.log("Chatbot: Rendering component, isOpen:", isOpen); // Debug log
+      return React.createElement(
+        'div',
+        { className: 'chatbot-container' },
+        React.createElement(
+          'div',
+          {
+            className: 'chatbot-toggle',
+            onClick: () => {
+              console.log("Chatbot: Toggle clicked, new isOpen:", !isOpen); // Debug log
+              setIsOpen(!isOpen);
+            }
+          },
+          '💬'
+        ),
+        React.createElement(
+          'div',
+          { className: isOpen ? 'chatbot-window open' : 'chatbot-window' },
+          React.createElement(
+            'div',
+            { className: 'chatbot-header' },
+            'Execs Forex AI Assistant'
+          ),
+          React.createElement(
+            'div',
+            { className: 'chatbot-messages' },
+            messages.map((msg, index) => {
+              const senderClass = msg.sender === 'user' || msg.sender === 'bot' ? msg.sender : 'bot';
+              console.log("Chatbot: Rendering message", index, "with sender:", senderClass); // Debug log
+              return React.createElement(
+                'div',
+                {
+                  key: index,
+                  className: 'chatbot-message ' + senderClass // Use string concatenation for clarity
+                },
+                msg.text
+              );
+            })
+          ),
+          React.createElement(
+            'div',
+            { className: 'chatbot-input' },
+            React.createElement('input', {
+              type: 'text',
+              value: input,
+              onChange: (e) => setInput(e.target.value),
+              onKeyPress: handleKeyPress,
+              placeholder: 'Ask about Execs Forex...'
+            }),
+            React.createElement(
+              'button',
+              { onClick: handleSend },
+              'Send'
+            )
+          )
+        )
+      );
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log("DOMContentLoaded: Checking for chatbot-root"); // Debug log
+      let rootElement = document.getElementById('chatbot-root');
+      if (!rootElement) {
+        console.warn("chatbot-root not found, creating dynamically"); // Debug log
+        rootElement = document.createElement('div');
+        rootElement.id = 'chatbot-root';
+        rootElement.className = 'chatbot-container';
+        document.body.appendChild(rootElement);
+      }
+      console.log("chatbot-root found or created, rendering Chatbot"); // Debug log
+      try {
+        const root = ReactDOM.createRoot(rootElement);
+        root.render(React.createElement(Chatbot, null));
+        console.log("Chatbot: Rendered successfully"); // Debug log
+      } catch (e) {
+        console.error("Chatbot: Error rendering:", e); // Debug log
+      }
     });
   </script>
 </body>

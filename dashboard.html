@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ExecsForex - Dashboard</title>
+  <title>Execs Forex - Dashboard</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.min.js"></script>
+  
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -40,6 +40,8 @@
       --table-border: rgba(0, 0, 0, 0.1);
       --table-header-bg: rgba(2, 132, 199, 0.1);
     }
+    .text-contrast { color: var(--text-primary); text-shadow: var(--text-shadow, none); }
+    .light-theme .text-contrast { --text-shadow: 0 0 2px rgba(0, 0, 0, 0.2); }
     .container { width: 100%; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem; }
     @media (min-width: 640px) { .container { max-width: 640px; } }
     @media (min-width: 768px) { .container { max-width: 768px; } }
@@ -106,7 +108,7 @@
     .tab.active { border-bottom-color: var(--accent-primary); color: var(--accent-primary); }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-    #roi-chart { max-height: 200px; }
+    #roi-chart { width: 100% !important; height: 300px !important; display: block !important; visibility: visible !important; max-width: 100%; max-height: 300px; }
     .table-container { overflow-x: auto; max-width: 100%; }
     .table { width: 100%; border-collapse: collapse; table-layout: auto; }
     .table th, .table td { border: 1px solid var(--table-border); padding: 0.5rem; text-align: left; min-width: 100px; word-break: break-all; white-space: normal; }
@@ -115,7 +117,7 @@
     .wallet-address:hover::after {
       content: attr(data-full-address);
       position: absolute;
-      background: var(--bg-gray-900, #1f2937);
+      background: var(--bg-gray-900, #111827);
       color: var(--text-primary);
       padding: 0.5rem;
       border-radius: 0.25rem;
@@ -132,6 +134,42 @@
     .theme-toggle { cursor: pointer; font-size: 1.25rem; }
     .filter-container { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
     .filter-select { background: var(--input-bg); color: var(--input-text); border: 1px solid var(--card-border); padding: 0.5rem; border-radius: 0.25rem; }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 30;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--accent-primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      width: 80%;
+      max-width: 600px;
+      min-width: 300px;
+      max-height: 90vh;
+      overflow-y: auto;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 20px rgba(0, 229, 255, 0.3);
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-primary);
+      transition: color 0.3s ease;
+    }
+    .modal-close:hover { color: var(--accent-primary); }
     @media (max-width: 640px) {
       .table { display: block; }
       .table thead { display: none; }
@@ -145,45 +183,25 @@
         margin-bottom: 0.25rem;
         color: var(--accent-primary);
       }
+      .modal-content { width: 90%; padding: 1rem; }
     }
-
-    /* Custom Futuristic Styles */
     body {
       font-family: 'Inter', sans-serif;
       scroll-behavior: smooth;
       background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
       color: var(--text-primary);
     }
-    .dashboard-bg {
-      position: relative;
-      overflow: hidden;
-    }
-    #particles-js {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-    }
-    .dashboard-content {
-      z-index: 1;
-      position: relative;
-    }
+    .dashboard-bg { position: relative; overflow: hidden; }
+    #particles-js { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+    .dashboard-content { z-index: 1; position: relative; }
     .form-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       backdrop-filter: blur(10px);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .form-card:hover {
-      box-shadow: 0 10px 20px rgba(0, 229, 255, 0.3);
-      border-color: var(--accent-primary);
-    }
-    .nav-link {
-      position: relative;
-      color: var(--text-primary);
-    }
+    .form-card:hover { box-shadow: 0 10px 20px rgba(0, 229, 255, 0.3); border-color: var(--accent-primary); }
+    .nav-link { position: relative; color: var(--text-primary); }
     .nav-link::after {
       content: '';
       position: absolute;
@@ -194,15 +212,9 @@
       background: var(--accent-primary);
       transition: width 0.3s ease;
     }
-    .nav-link:hover::after {
-      width: 100%;
-    }
-    h1, h2, h3 {
-      font-family: 'Orbitron', sans-serif;
-    }
-    .glow {
-      text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
-    }
+    .nav-link:hover::after { width: 100%; }
+    h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
+    .glow { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
     .input-field {
       transition: all 0.3s ease;
       border: 1px solid var(--card-border);
@@ -212,6 +224,7 @@
       height: 1.75rem;
       background: var(--input-bg);
       color: var(--input-text);
+      box-sizing: border-box;
     }
     .input-field:focus {
       border: 2px solid var(--accent-primary);
@@ -225,175 +238,166 @@
       height: 4px;
       transition: width 0.5s ease;
     }
-    .wallet-box {
-      background: var(--table-header-bg);
-      border: 1px solid var(--accent-primary);
-      word-break: break-all;
-    }
+    .wallet-box { background: var(--table-header-bg); border: 1px solid var(--accent-primary); word-break: break-all; }
     .status-pending { color: #facc15; }
     .status-processing { color: #60a5fa; }
     .status-verified { color: #34d399; }
     .bg-gray-900 { background-color: var(--bg-gray-900, #111827); }
   </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <script type="text/javascript">
-    var gk_isXlsx = false;
-    var gk_xlsxFileLookup = {};
-    var gk_fileData = {};
-    function filledCell(cell) {
-      return cell !== '' && cell != null;
-    }
-    function loadFileData(filename) {
-      if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-        try {
-          var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-          var firstSheetName = workbook.SheetNames[0];
-          var worksheet = workbook.Sheets[firstSheetName];
-          var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-          var filteredData = jsonData.filter(row => row.some(filledCell));
-          var headerRowIndex = filteredData.findIndex((row, index) =>
-            row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-          );
-          if (headerRowIndex === -1 || headerRowIndex > 25) {
-            headerRowIndex = 0;
-          }
-          var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-          csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-          return csv;
-        } catch (e) {
-          console.error('Error loading file data:', e);
-          return "";
+    function handleChartJsError() {
+      console.error('Chart.js failed to load from primary CDN. Attempting fallback...');
+      showError('roi-modal', 'roi-error', 'Failed to load chart library. Retrying...');
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.3/chart.min.js';
+      script.onload = () => {
+        console.log('Chart.js loaded from fallback CDN');
+        if (document.getElementById('roi-modal').style.display === 'flex') {
+          setTimeout(() => {
+            console.log('Attempting to reinitialize ROI chart after fallback load');
+            initROIChart(userData.investment || 80000, userData.plan || 'free', document.getElementById('plan-selector').value);
+          }, 100);
         }
-      }
-      return gk_fileData[filename] || "";
+      };
+      script.onerror = () => {
+        console.error('Fallback Chart.js also failed to load');
+        showError('roi-modal', 'roi-error', 'Chart library unavailable. Please try again later.');
+      };
+      document.head.appendChild(script);
     }
   </script>
-  <!-- Navigation -->
   <nav class="bg-gradient-to-r text-primary p-4 fixed w-full top-0 z-20 shadow-lg">
     <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-3xl font-bold glow">ΞXΞCS FORΞX</h1>
+      <h1 class="text-3xl font-bold glow text-contrast">ΞXΞCS FORΞX</h1>
       <div class="flex items-center space-x-6">
-        <a href="index.html" class="text-lg nav-link">Home</a>
-        <a href="index.html#plans" class="text-lg nav-link">Plans</a>
-        <a href="index.html#about" class="text-lg nav-link">About</a>
-        <a href="index.html#contact" class="text-lg nav-link">Contact</a>
+        <a href="index.html" class="text-lg nav-link text-contrast">Home</a>
+        <a href="index.html#plans" class="text-lg nav-link text-contrast">Plans</a>
+        <a href="index.html#about" class="text-lg nav-link text-contrast">About</a>
+        <a href="index.html#contact" class="text-lg nav-link text-contrast">Contact</a>
+        <a href="dashboard.html" class="text-lg nav-link text-contrast">Dashboard</a>
         <span id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</span>
       </div>
     </div>
   </nav>
-
-  <!-- Dashboard Section -->
   <section id="dashboard" class="dashboard-bg text-primary py-20">
     <div id="particles-js"></div>
     <div class="container mx-auto px-4 dashboard-content">
-      <h2 class="text-4xl font-bold mb-6 glow text-center">Your Investment Dashboard</h2>
+      <h2 class="text-4xl font-bold mb-6 glow text-center text-contrast">Your Investment Dashboard</h2>
       <div class="form-card p-6 rounded-xl max-w-md mx-auto">
-        <!-- Plan Info -->
-        <div class="mb-6 text-base text-red-400 text-center" id="plan-info"></div>
-        <!-- Progress Bar -->
+        <div class="mb-6 text-base text-red-400 text-center text-contrast" id="plan-info"></div>
         <div class="w-full bg-gray-800 rounded-full h-1 mb-6">
           <div id="progress-bar" class="progress-bar w-1/4"></div>
         </div>
-        <!-- Initial Form -->
         <div id="initial-form" class="flex flex-col space-y-3">
           <div>
-            <label for="firstName" class="block text-base mb-1">First Name</label>
+            <label for="firstName" class="block text-base mb-1 text-contrast">First Name</label>
             <input type="text" id="firstName" class="w-full rounded-lg bg-input text-input input-field" required>
           </div>
           <div>
-            <label for="lastName" class="block text-base mb-1">Last Name</label>
+            <label for="lastName" class="block text-base mb-1 text-contrast">Last Name</label>
             <input type="text" id="lastName" class="w-full rounded-lg bg-input text-input input-field" required>
           </div>
           <div>
-            <label for="email" class="block text-base mb-1">Email</label>
+            <label for="email" class="block text-base mb-1 text-contrast">Email</label>
             <input type="email" id="email" class="w-full rounded-lg bg-input text-input input-field" required>
           </div>
           <div>
-            <label for="investment" class="block text-base mb-1">Investment Amount (USD)</label>
+            <label for="investment" class="block text-base mb-1 text-contrast">Investment Amount (USD)</label>
             <input type="number" id="investment" class="w-full rounded-lg bg-input text-input input-field" required min="1">
           </div>
-          <p class="text-sm text-red-400 mb-4">Note: Payment is accepted only via Bitcoin (BTC). Wallet details will be provided after verification.</p>
+          <p class="text-sm text-red-400 mb-4 text-contrast">Note: Payment is accepted only via Bitcoin (BTC). Wallet details will be provided after verification.</p>
           <button id="submitBtn" class="btn-primary px-6 py-3 rounded-full font-semibold">Activate Plan</button>
           <button id="show-login-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Log In</button>
-          <div id="loading" class="hidden text-base text-secondary mt-3 text-center">
+          <p class="text-sm text-contrast">Already have an account? Please use the Log In button above to access your dashboard.</p>
+          <div id="loading" class="hidden text-base text-secondary mt-3 text-center text-contrast">
             <span class="animate-pulse">Processing...</span>
           </div>
-          <div id="error-message" class="hidden error-message"></div>
+          <div id="error-message" class="hidden error-message text-contrast"></div>
         </div>
-        <!-- Wallet Info (Hidden Initially) -->
         <div id="wallet-info" class="hidden mt-6 p-4 bg-gray-900 rounded-lg text-left">
-          <h3 class="text-lg font-bold mb-2">Send Payment To:</h3>
-          <p class="text-sm text-secondary mb-2">Bitcoin Wallet Address:</p>
-          <p id="wallet-address" class="text-sm wallet-box p-2 rounded-lg">bc1q5autw3efgqu6y2nz7tz6ge3sacyd098xeqyqcp</p>
-          <p class="text-sm text-secondary mt-2">Please send the exact BTC amount to this address. You will receive a confirmation email once the payment is verified.</p>
+          <h3 class="text-lg font-bold mb-2 text-contrast">Send Payment To:</h3>
+          <p class="text-sm text-secondary mb-2 text-contrast">Bitcoin Wallet Address:</p>
+          <p id="wallet-address" class="text-sm wallet-box p-2 rounded-lg text-contrast">bc1q5autw3efgqu6y2nz7tz6ge3sacyd098xeqyqcp</p>
+          <p class="text-sm text-secondary mt-2 text-contrast">Please send the exact BTC amount to this address. You will receive a confirmation email once the payment is verified.</p>
           <div id="transaction-status" class="text-sm mt-4">
-            <p>Transaction Status: <span id="tx-status" class="status-pending">Pending</span></p>
-            <p>Confirmations: <span id="tx-confirmations">0</span></p>
+            <p class="text-contrast">Transaction Status: <span id="tx-status" class="status-pending">Pending</span></p>
+            <p class="text-contrast">Confirmations: <span id="tx-confirmations">0</span></p>
           </div>
         </div>
-        <!-- Login Form (Hidden Initially) -->
-        <div id="login-form" class="hidden flex flex-col space-y-3">
-          <h3 class="text-lg font-bold mb-2">Log In to Your Account</h3>
+        <div id="verify-form" class="hidden flex flex-col space-y-3">
+          <h3 class="text-lg font-bold mb-2 text-contrast">Verify Your Account</h3>
           <div>
-            <label for="login-email" class="block text-base mb-1">Email</label>
+            <label for="verify-email" class="block text-base mb-1 text-contrast">Email</label>
+            <input type="email" id="verify-email" class="w-full rounded-lg bg-input text-input input-field" required>
+          </div>
+          <div>
+            <label for="verify-password" class="block text-base mb-1 text-contrast">Password</label>
+            <input type="password" id="verify-password" class="w-full rounded-lg bg-input text-input input-field" required>
+          </div>
+          <div>
+            <label for="verify-confirm-password" class="block text-base mb-1 text-contrast">Confirm Password</label>
+            <input type="password" id="verify-confirm-password" class="w-full rounded-lg bg-input text-input input-field" required>
+          </div>
+          <button id="verify-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Verify Password</button>
+          <div id="verify-error" class="hidden error-message text-contrast"></div>
+        </div>
+        <div id="login-form" class="hidden flex flex-col space-y-3">
+          <h3 class="text-lg font-bold mb-2 text-contrast">Log In to Your Account</h3>
+          <div>
+            <label for="login-email" class="block text-base mb-1 text-contrast">Email</label>
             <input type="email" id="login-email" class="w-full rounded-lg bg-input text-input input-field" required>
           </div>
           <div>
-            <label for="password" class="block text-base mb-1">Password</label>
-            <input type="password" id="password" class="w-full rounded-lg bg-input text-input input-field" required>
+            <label for="login-password" class="block text-base mb-1 text-contrast">Password</label>
+            <input type="password" id="login-password" class="w-full rounded-lg bg-input text-input input-field" required>
           </div>
-          <div>
-            <label for="confirm-password" class="block text-base mb-1">Confirm Password</label>
-            <input type="password" id="confirm-password" class="w-full rounded-lg bg-input text-input input-field" required>
-          </div>
-          <button id="login-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Verify Password</button>
-          <div id="login-error" class="hidden error-message"></div>
+          <button id="login-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Login</button>
+          <div id="login-error" class="hidden error-message text-contrast"></div>
         </div>
-        <!-- 2FA Form (Hidden Initially) -->
         <div id="2fa-form" class="hidden flex flex-col space-y-3">
-          <h3 class="text-lg font-bold mb-2">Two-Factor Authentication</h3>
-          <p class="text-sm text-secondary">A 6-digit code has been sent to your email.</p>
+          <h3 class="text-lg font-bold mb-2 text-contrast">Two-Factor Authentication</h3>
+          <p class="text-sm text-secondary text-contrast">A 6-digit code has been sent to your email.</p>
           <div>
-            <label for="2fa-code" class="block text-base mb-1">Verification Code</label>
+            <label for="2fa-code" class="block text-base mb-1 text-contrast">Verification Code</label>
             <input type="text" id="2fa-code" class="w-full rounded-lg bg-input text-input input-field" required maxlength="6">
           </div>
           <button id="2fa-verify-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Verify Code</button>
           <button id="2fa-resend-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Resend Code</button>
-          <div id="2fa-error" class="hidden error-message"></div>
+          <div id="2fa-error" class="hidden error-message text-contrast"></div>
         </div>
-        <!-- Tabbed Dashboard (Hidden Initially) -->
         <div id="dashboard-tabs" class="hidden mt-6">
           <div class="flex space-x-4 mb-4">
-            <div class="tab active" data-tab="portfolio">Portfolio Overview</div>
-            <div class="tab" data-tab="transactions">Transaction History</div>
-            <div class="tab" data-tab="roi">ROI Projections</div>
-            <div class="tab" data-tab="settings">Account Settings</div>
+            <div class="tab active text-contrast" data-tab="portfolio">Portfolio Overview</div>
+            <div class="tab text-contrast" data-tab="transactions">Transaction History</div>
+            <div class="tab text-contrast" data-tab="roi">ROI Projections</div>
+            <div class="tab text-contrast" data-tab="settings">Account Settings</div>
           </div>
           <div id="portfolio" class="tab-content active p-4 bg-gray-900 rounded-lg">
-            <h3 class="text-lg font-bold mb-2">Portfolio Overview</h3>
-            <p>Plan: <span id="portfolio-plan"></span></p>
-            <p>Investment Amount: <span id="portfolio-investment"></span></p>
-            <p>Current Balance: <span id="portfolio-balance"></span></p>
+            <h3 class="text-lg font-bold mb-2 text-contrast">Portfolio Overview</h3>
+            <p class="text-contrast">Plan: <span id="portfolio-plan"></span></p>
+            <p class="text-contrast">Investment Amount: <span id="portfolio-investment"></span></p>
+            <p class="text-contrast">Current Balance: <span id="portfolio-balance"></span></p>
             <div class="btc-price-widget">
-              <p>Current BTC Price: <span id="btc-price">$70,000</span></p>
-              <p>Last Updated: <span id="btc-price-timestamp"></span></p>
-              <button id="refresh-price-btn" class="btn-primary px-6 py-3 rounded-full font-semibold"
->Refresh Price</button>
+              <p class="text-contrast">Current BTC Price: <span id="btc-price">$70,000</span></p>
+              <p class="text-contrast">Last Updated: <span id="btc-price-timestamp"></span></p>
+              <button id="refresh-price-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Refresh Price</button>
             </div>
           </div>
           <div id="transactions" class="tab-content p-4 bg-gray-900 rounded-lg">
-            <h3 class="text-lg font-bold mb-2">Transaction History</h3>
+            <h3 class="text-lg font-bold mb-2 text-contrast">Transaction History</h3>
             <div class="filter-container">
               <div>
-                <label for="sort-date" class="block text-sm mb-1">Sort by Date &nbsp</label>
+                <label for="sort-date" class="block text-sm mb-1 text-contrast">Sort by Date &nbsp</label>
                 <select id="sort-date" class="filter-select">
                   <option value="desc">Newest First</option>
                   <option value="asc">Oldest First</option>
                 </select>
               </div>
               <div>
-                <label for="filter-status" class="block text-sm mb-1">Filter by Status</label>
+                <label for="filter-status" class="block text-sm mb-1 text-contrast">Filter by Status</label>
                 <select id="filter-status" class="filter-select">
                   <option value="all">All</option>
                   <option value="Pending">Pending</option>
@@ -406,203 +410,220 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th>Date</th>
-                    <th>Wallet Address</th>
-                    <th>Amount (USD)</th>
-                    <th>Status</th>
+                    <th class="text-contrast">Date</th>
+                    <th class="text-contrast">Wallet Address</th>
+                    <th class="text-contrast">Amount (USD)</th>
+                    <th class="text-contrast">Status</th>
                   </tr>
                 </thead>
                 <tbody id="transaction-table"></tbody>
               </table>
             </div>
-            <button id="export-csv-btn" class="btn-primary px-6 py-3 rounded-full font-semibold"
-">Export as CSV</button>
-          </div>
-          <div id="roi" class="tab-content p-4 bg-gray-900 rounded-lg">
-            <h3 class="text-lg font-bold mb-2">Projected Returns</h3>
-            <canvas id="roi-chart"></canvas>
+            <button id="export-csv-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Export as CSV</button>
           </div>
           <div id="settings" class="tab-content p-4 bg-gray-900 rounded-lg">
-            <h3 class="text-lg font-bold mb-2">Account Settings</h3>
+            <h3 class="text-lg font-bold mb-2 text-contrast">Account Settings</h3>
             <div class="flex flex-col space-y-3">
               <div>
-                <label for="settings-email" class="block text-base mb-1">Update Email</label>
+                <label for="settings-email" class="block text-base mb-1 text-contrast">Update Email</label>
                 <input type="email" id="settings-email" class="w-full rounded-lg bg-input text-input input-field">
               </div>
               <div>
-                <label for="settings-password" class="block text-base mb-1">New Password</label>
+                <label for="settings-password" class="block text-base mb-1 text-contrast">New Password</label>
                 <input type="password" id="settings-password" class="w-full rounded-lg bg-input text-input input-field">
               </div>
               <div>
-                <label for="settings-confirm-password" class="block text-base mb-1">Confirm New Password</label>
+                <label for="settings-confirm-password" class="block text-base mb-1 text-contrast">Confirm New Password</label>
                 <input type="password" id="settings-confirm-password" class="w-full rounded-lg bg-input text-input input-field">
               </div>
               <button id="update-settings-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Update Settings</button>
               <button id="logout-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Logout</button>
               <div class="mt-4">
-                <h4 class="text-base font-bold mb-2">Withdraw Funds</h4>
+                <h4 class="text-base font-bold mb-2 text-contrast">Withdraw Funds</h4>
                 <div>
-                  <label for="withdrawal-amount" class="block text-base mb-1">Amount (USD)</label>
+                  <label for="withdrawal-amount" class="block text-base mb-1 text-contrast">Amount (USD)</label>
                   <input type="number" id="withdrawal-amount" class="w-full rounded-lg bg-input text-input input-field" min="1">
                 </div>
                 <div>
-                  <label for="withdrawal-address" class="block text-base mb-1">Bitcoin Wallet Address</label>
+                  <label for="withdrawal-address" class="block text-base mb-1 text-contrast">Bitcoin Wallet Address</label>
                   <input type="text" id="withdrawal-address" class="w-full rounded-lg bg-input text-input input-field">
                 </div>
                 <button id="withdrawal-btn" class="btn-primary mt-2 px-6 py-3 rounded-full font-semibold">Request Withdrawal</button>
               </div>
-              <div id="settings-error" class="hidden error-message"></div>
+              <div id="settings-error" class="hidden error-message text-contrast"></div>
             </div>
           </div>
-          <!-- Withdrawal 2FA Form (Hidden Initially) -->
           <div id="withdrawal-2fa-form" class="hidden flex flex-col space-y-3">
-            <h3 class="text-lg font-bold mb-2">Verify Withdrawal</h3>
-            <p class="text-sm text-secondary">A 6-digit code has been sent to your email.</p>
+            <h3 class="text-lg font-bold mb-2 text-contrast">Verify Withdrawal</h3>
+            <p class="text-sm text-secondary text-contrast">A 6-digit code has been sent to your email.</p>
             <div>
-              <label for="withdrawal-2fa-code" class="block text-base mb-1">Verification Code</label>
+              <label for="withdrawal-2fa-code" class="block text-base mb-1 text-contrast">Verification Code</label>
               <input type="text" id="withdrawal-2fa-code" class="w-full rounded-lg bg-input text-input input-field" required maxlength="6">
             </div>
             <button id="withdrawal-2fa-verify-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Verify Withdrawal</button>
             <button id="withdrawal-2fa-resend-btn" class="btn-secondary mt-2">Resend Code</button>
-            <div id="withdrawal-2fa-error" class="hidden error-message"></div>
+            <div id="withdrawal-2fa-error" class="hidden error-message text-contrast"></div>
           </div>
         </div>
       </div>
     </div>
   </section>
-
-  <!-- Footer -->
+  <div id="roi-modal" class="modal">
+    <div class="modal-content">
+      <span id="roi-modal-close" class="modal-close">&times;</span>
+      <h3 class="text-lg font-bold mb-2 text-contrast">Projected Returns</h3>
+      <div class="mb-4">
+        <label for="plan-selector" class="block text-base mb-1 text-contrast">Select Plan</label>
+        <select id="plan-selector" class="filter-select w-full">
+          <option value="free">Free Plan (10% Monthly ROI, Min. Deposit: $80,000)</option>
+          <option value="premium">Premium Plan (20% Monthly ROI, Min. Deposit: $1,000,000)</option>
+          <option value="cooperative">Cooperative Plan (5% Monthly ROI, Min. Deposit: $1)</option>
+        </select>
+      </div>
+      <canvas id="roi-chart" style="display: block; width: 100%; height: 300px;"></canvas>
+      <div id="roi-error" class="hidden error-message text-contrast"></div>
+      <button id="refresh-page-btn" class="btn-primary px-6 py-3 rounded-full font-semibold mt-4">Refresh Chart</button>
+    </div>
+  </div>
   <footer class="bg-gradient-to-r text-primary py-8">
     <div class="container mx-auto text-center px-4">
-      <p class="text-lg">© 2025 ExecsForex. All rights reserved.</p>
-      <p class="mt-2">Domain: www.execsforex.com</p>
+      <p class="text-lg text-contrast">© 2025 ExecsForex. All rights reserved.</p>
+      <p class="mt-2 text-contrast">Domain: <a href="http://www.execsforex.com" class="nav-link">www.execsforex.com</a></p>
     </div>
   </footer>
-
   <script>
-    (function() {
-      document.addEventListener('DOMContentLoaded', () => {
-        // Check for Particles.js availability
-        if (!window.particlesJS) {
-          console.error('Particles.js not loaded');
-          showError('initial-form', 'error-message', 'Failed to load visual effects. Please refresh the page.');
-          return;
-        }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.particlesJS) {
+        console.error('Particles.js not loaded');
+        showError('initial-form', 'error-message', 'Failed to load visual effects. Please refresh the page.');
+        return;
+      }
+      try {
+        particlesJS('particles-js', {
+          particles: {
+            number: { value: 80, density: { enable: true, value_area: 800 } },
+            color: { value: document.documentElement.classList.contains('light-theme') ? '#0284c7' : '#00eaff' },
+            shape: { type: 'circle' },
+            opacity: { value: 0.5, random: true },
+            size: { value: 3, random: true },
+            line_linked: { enable: true, distance: 150, color: document.documentElement.classList.contains('light-theme') ? '#0284c7' : '#00eaff', opacity: 0.4, width: 2 },
+            move: { speed: 2, direction: 'none', random: true }
+          },
+          interactivity: {
+            detect_on: 'canvas',
+            events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
+            modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
+          }
+        });
+        console.log('Particles.js initialized successfully');
+      } catch (e) {
+        console.error('Error initializing Particles.js:', e);
+        showError('initial-form', 'error-message', 'Failed to initialize visual effects. Functionality may be limited.');
+      }
 
-        // Initialize Particles.js
-        try {
-          particlesJS('particles-js', {
-            particles: {
-              number: { value: 80, density: { enable: true, value_area: 800 } },
-              color: { value: document.documentElement.classList.contains('light-theme') ? '#0284c7' : '#00eaff' },
-              shape: { type: 'circle' },
-              opacity: { value: 0.5, random: true },
-              size: { value: 3, random: true },
-              line_linked: { enable: true, distance: 150, color: document.documentElement.classList.contains('light-theme') ? '#0284c7' : '#00eaff', opacity: 0.4, width: 2 },
-              move: { speed: 2, direction: 'none', random: true }
-            },
-            interactivity: {
-              detect_on: 'canvas',
-              events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
-              modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
-            }
-          });
-        } catch (e) {
-          console.error('Error initializing Particles.js:', e);
-          showError('initial-form', 'error-message', 'Failed to initialize visual effects. Functionality may be limited.');
-        }
+      const urlParams = new URLSearchParams(window.location.search);
+      const plan = urlParams.get('plan');
+      const planInfo = document.getElementById('plan-info');
+      const investmentInput = document.getElementById('investment');
+      const progressBar = document.getElementById('progress-bar');
+      const submitBtn = document.getElementById('submitBtn');
+      const showLoginBtn = document.getElementById('show-login-btn');
+      const loading = document.getElementById('loading');
+      const errorMessage = document.getElementById('error-message');
+      const walletInfo = document.getElementById('wallet-info');
+      const walletAddress = document.getElementById('wallet-address');
+      const txStatus = document.getElementById('tx-status');
+      const txConfirmations = document.getElementById('tx-confirmations');
+      const initialForm = document.getElementById('initial-form');
+      const loginForm = document.getElementById('login-form');
+      const verifyForm = document.getElementById('verify-form');
+      const loginBtn = document.getElementById('login-btn');
+      const loginEmailInput = document.getElementById('login-email');
+      const loginPasswordInput = document.getElementById('login-password');
+      const verifyEmailInput = document.getElementById('verify-email');
+      const verifyPasswordInput = document.getElementById('verify-password');
+      const verifyConfirmPasswordInput = document.getElementById('verify-confirm-password');
+      const verifyBtn = document.getElementById('verify-btn');
+      const loginError = document.getElementById('login-error');
+      const verifyError = document.getElementById('verify-error');
+      const twoFaForm = document.getElementById('2fa-form');
+      const twoFaCode = document.getElementById('2fa-code');
+      const twoFaVerifyBtn = document.getElementById('2fa-verify-btn');
+      const twoFaResendBtn = document.getElementById('2fa-resend-btn');
+      const twoFaError = document.getElementById('2fa-error');
+      const dashboardTabs = document.getElementById('dashboard-tabs');
+      const tabs = document.querySelectorAll('.tab');
+      const tabContents = document.querySelectorAll('.tab-content');
+      const portfolioPlan = document.getElementById('portfolio-plan');
+      const portfolioInvestment = document.getElementById('portfolio-investment');
+      const portfolioBalance = document.getElementById('portfolio-balance');
+      const transactionTable = document.getElementById('transaction-table');
+      const sortDate = document.getElementById('sort-date');
+      const filterStatus = document.getElementById('filter-status');
+      const planSelector = document.getElementById('plan-selector');
+      const settingsEmail = document.getElementById('settings-email');
+      const settingsPassword = document.getElementById('settings-password');
+      const settingsConfirmPassword = document.getElementById('settings-confirm-password');
+      const updateSettingsBtn = document.getElementById('update-settings-btn');
+      const logoutBtn = document.getElementById('logout-btn');
+      const withdrawalBtn = document.getElementById('withdrawal-btn');
+      const withdrawalAmount = document.getElementById('withdrawal-amount');
+      const withdrawalAddress = document.getElementById('withdrawal-address');
+      const withdrawal2faForm = document.getElementById('withdrawal-2fa-form');
+      const withdrawal2faCode = document.getElementById('withdrawal-2fa-code');
+      const withdrawal2faVerifyBtn = document.getElementById('withdrawal-2fa-verify-btn');
+      const withdrawal2faResendBtn = document.getElementById('withdrawal-2fa-resend-btn');
+      const withdrawal2faError = document.getElementById('withdrawal-2fa-error');
+      const settingsError = document.getElementById('settings-error');
+      const refreshPriceBtn = document.getElementById('refresh-price-btn');
+      const btcPrice = document.getElementById('btc-price');
+      const btcPriceTimestamp = document.getElementById('btc-price-timestamp');
+      const exportCsvBtn = document.getElementById('export-csv-btn');
+      const themeToggle = document.getElementById('theme-toggle');
+      const roiModal = document.getElementById('roi-modal');
+      const roiModalClose = document.getElementById('roi-modal-close');
+      const refreshPageBtn = document.getElementById('refresh-page-btn');
+      const roiChartCanvas = document.getElementById('roi-chart');
 
-        // DOM elements
-        const urlParams = new URLSearchParams(window.location.search);
-        const plan = urlParams.get('plan');
-        const planInfo = document.getElementById('plan-info');
-        const investmentInput = document.getElementById('investment');
-        const progressBar = document.getElementById('progress-bar');
-        const submitBtn = document.getElementById('submitBtn');
-        const showLoginBtn = document.getElementById('show-login-btn');
-        const loading = document.getElementById('loading');
-        const errorMessage = document.getElementById('error-message');
-        const walletInfo = document.getElementById('wallet-info');
-        const walletAddress = document.getElementById('wallet-address');
-        const txStatus = document.getElementById('tx-status');
-        const txConfirmations = document.getElementById('tx-confirmations');
-        const initialForm = document.getElementById('initial-form');
-        const loginForm = document.getElementById('login-form');
-        const loginBtn = document.getElementById('login-btn');
-        const loginEmailInput = document.getElementById('login-email');
-        const passwordInput = document.getElementById('password');
-        const confirmPasswordInput = document.getElementById('confirm-password');
-        const loginError = document.getElementById('login-error');
-        const twoFaForm = document.getElementById('2fa-form');
-        const twoFaCode = document.getElementById('2fa-code');
-        const twoFaVerifyBtn = document.getElementById('2fa-verify-btn');
-        const twoFaResendBtn = document.getElementById('2fa-resend-btn');
-        const twoFaError = document.getElementById('2fa-error');
-        const dashboardTabs = document.getElementById('dashboard-tabs');
-        const tabs = document.querySelectorAll('.tab');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const portfolioPlan = document.getElementById('portfolio-plan');
-        const portfolioInvestment = document.getElementById('portfolio-investment');
-        const portfolioBalance = document.getElementById('portfolio-balance');
-        const transactionTable = document.getElementById('transaction-table');
-        const sortDate = document.getElementById('sort-date');
-        const filterStatus = document.getElementById('filter-status');
-        const roiCalculator = document.getElementById('roi');
-        const settingsEmail = document.getElementById('settings-email');
-        const settingsPassword = document.getElementById('settings-password');
-        const settingsConfirmPassword = document.getElementById('settings-confirm-password');
-        const updateSettingsBtn = document.getElementById('update-settings-btn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const withdrawalBtn = document.getElementById('withdrawal-btn');
-        const withdrawalAmount = document.getElementById('withdrawal-amount');
-        const withdrawalAddress = document.getElementById('withdrawal-address');
-        const withdrawal2faForm = document.getElementById('withdrawal-2fa-form');
-        const withdrawal2faCode = document.getElementById('withdrawal-2fa-code');
-        const withdrawal2faVerifyBtn = document.getElementById('withdrawal-2fa-verify-btn');
-        const withdrawal2faResendBtn = document.getElementById('withdrawal-2fa-resend-btn');
-        const withdrawal2faError = document.getElementById('withdrawal-2fa-error');
-        const settingsError = document.getElementById('settings-error');
-        const refreshPriceBtn = document.getElementById('refresh-price-btn');
-        const btcPrice = document.getElementById('btc-price');
-        const btcPriceTimestamp = document.getElementById('btc-price-timestamp');
-        const exportCsvBtn = document.getElementById('export-csv-btn');
-        const themeToggle = document.getElementById('theme-toggle');
+      let userData = {
+        email: null,
+        password: null,
+        plan: null,
+        investment: null,
+        activationDate: null,
+        transactions: []
+      };
+      let simulated2faCode = null;
 
-        // Simulated user data (replace with backend in production)
-        let userData = {
-          email: null,
-          password: null,
-          plan: null,
-          investment: null,
-          activationDate: null,
-          transactions: []
+      if (!planInfo || !investmentInput || !progressBar || !submitBtn || !showLoginBtn || !loading || !errorMessage || !walletInfo || !walletAddress || !txStatus || !txConfirmations || !initialForm || !loginForm || !verifyForm || !loginBtn || !loginEmailInput || !loginPasswordInput || !verifyEmailInput || !verifyPasswordInput || !verifyConfirmPasswordInput || !verifyBtn || !loginError || !verifyError || !twoFaForm || !twoFaCode || !twoFaVerifyBtn || !twoFaResendBtn || !twoFaError || !dashboardTabs || !tabs.length || !tabContents.length || !portfolioPlan || !portfolioInvestment || !portfolioBalance || !transactionTable || !sortDate || !filterStatus || !planSelector || !settingsEmail || !settingsPassword || !settingsConfirmPassword || !updateSettingsBtn || !logoutBtn || !withdrawalBtn || !withdrawalAmount || !withdrawalAddress || !withdrawal2faForm || !withdrawal2faCode || !withdrawal2faVerifyBtn || !withdrawal2faResendBtn || !withdrawal2faError || !settingsError || !refreshPriceBtn || !btcPrice || !btcPriceTimestamp || !exportCsvBtn || !themeToggle || !roiModal || !roiModalClose || !refreshPageBtn || !roiChartCanvas) {
+        console.error('One or more DOM elements are missing');
+        showError('initial-form', 'error-message', 'Page elements failed to load. Please refresh the page.');
+        return;
+      }
+
+      if (!userData.email) {
+        userData = {
+          email: 'john@example.com',
+          password: 'password123',
+          plan: plan || 'free',
+          investment: plan === 'premium' ? 1000000 : 80000,
+          activationDate: new Date(),
+          transactions: [{
+            date: new Date().toLocaleDateString(),
+            walletAddress: 'bc1q5autw3efgqu6y2nz7tz6ge3sacyd098xeqyqcp',
+            amount: (plan === 'premium' ? 1000000 : 80000).toLocaleString(),
+            status: 'Verified'
+          }]
         };
-        let roiChart = null;
-        let simulated2faCode = null;
+      }
 
-        // Simulate an existing account for testing login
-        if (!userData.email) {
-          userData = {
-            email: 'john@example.com',
-            password: 'password123',
-            plan: plan || 'free',
-            investment: plan === 'premium' ? 1000000 : 10000,
-            activationDate: new Date(),
-            transactions: [{
-              date: new Date().toLocaleDateString(),
-              walletAddress: 'bc1q5autw3efgqu6y2nz7tz6ge3sacyd098xeqyqcp',
-              amount: (plan === 'premium' ? 1000000 : 10000).toLocaleString(),
-              status: 'Verified'
-            }]
-          };
-        }
-
-        // Helper function to show error messages
-        function showError(formId, errorId, message) {
+      function showError(formId, errorId, message) {
+        try {
           const errorElement = document.getElementById(errorId);
           if (errorElement) {
             errorElement.textContent = message;
             errorElement.classList.remove('hidden');
+            errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
           } else {
             console.warn(`Error element ${errorId} not found`);
             alert(message);
@@ -613,675 +634,807 @@
           } else {
             console.warn(`Form ${formId} not found for scroll`);
           }
+        } catch (e) {
+          console.error('Error in showError:', e);
+          alert(message);
         }
+      }
 
-        // Check DOM elements
-        if (!planInfo || !investmentInput || !progressBar || !submitBtn || !showLoginBtn || !loading || !errorMessage || !walletInfo || !walletAddress || !txStatus || !txConfirmations || !initialForm || !loginForm || !loginBtn || !loginEmailInput || !passwordInput || !confirmPasswordInput || !loginError || !twoFaForm || !twoFaCode || !twoFaVerifyBtn || !twoFaResendBtn || !twoFaError || !dashboardTabs || !tabs.length || !tabContents.length || !portfolioPlan || !portfolioInvestment || !portfolioBalance || !transactionTable || !sortDate || !filterStatus || !roiCalculator || !settingsEmail || !settingsPassword || !settingsConfirmPassword || !updateSettingsBtn || !logoutBtn || !withdrawalBtn || !withdrawalAmount || !withdrawalAddress || !withdrawal2faForm || !withdrawal2faCode || !withdrawal2faVerifyBtn || !withdrawal2faResendBtn || !withdrawal2faError || !settingsError || !refreshPriceBtn || !btcPrice || !btcPriceTimestamp || !exportCsvBtn || !themeToggle) {
-          console.error('One or more DOM elements are missing');
-          showError('initial-form', 'error-message', 'Page elements failed to load. Please refresh the page.');
-          return;
-        }
-
-        // Theme toggle logic
-        function toggleTheme() {
-          try {
-            const isLightTheme = document.documentElement.classList.toggle('light-theme');
-            themeToggle.textContent = isLightTheme ? '🌞' : '🌙';
-            localStorage.setItem('theme', isLightTheme ? 'light' : 'dark');
-            if (window.particlesJS) {
-              particlesJS('particles-js', {
-                particles: {
-                  number: { value: 80, density: { enable: true, value_area: 800 } },
-                  color: { value: isLightTheme ? '#0284c7' : '#00eaff' },
-                  shape: { type: 'circle' },
-                  opacity: { value: 0.5, random: true },
-                  size: { value: 3, random: true },
-                  line_linked: { enable: true, distance: 150, color: isLightTheme ? '#0284c7' : '#00eaff', opacity: 0.4, width: 2 },
-                  move: { speed: 2, direction: 'none', random: true }
-                },
-                interactivity: {
-                  detect_on: 'canvas',
-                  events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
-                  modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
-                }
-              });
-            }
-            if (roiChart) {
-              roiChart.data.datasets[0].borderColor = isLightTheme ? '#0284c7' : '#00eaff';
-              roiChart.data.datasets[0].backgroundColor = isLightTheme ? 'rgba(2, 132, 199, 0.2)' : 'rgba(0, 229, 255, 0.2)';
-              roiChart.options.scales.y.ticks.color = isLightTheme ? '#1f2937' : '#e0e7ff';
-              roiChart.options.scales.x.ticks.color = isLightTheme ? '#1f2937' : '#e0e7ff';
-              roiChart.options.scales.y.grid.color = isLightTheme ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)';
-              roiChart.options.scales.x.grid.color = isLightTheme ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)';
-              roiChart.options.plugins.legend.labels.color = isLightTheme ? '#1f2937' : '#e0e7ff';
-              roiChart.update();
-            }
-          } catch (e) {
-            console.error('Error toggling theme:', e);
-            showError('initial-form', 'error-message', 'Failed to toggle theme.');
-          }
-        }
-
-        // Load saved theme
-        if (localStorage.getItem('theme') === 'light') {
-          document.documentElement.classList.add('light-theme');
-          themeToggle.textContent = '🌞';
-        }
-
-        // Theme toggle event
-        themeToggle.addEventListener('click', toggleTheme);
-
-        // Plan setup
-        if (plan) {
-          if (plan === 'free') {
-            planInfo.textContent = 'Free Plan: Minimum Deposit $10,000, 10% Monthly ROI';
-            investmentInput.min = 10000;
-          } else if (plan === 'premium') {
-            planInfo.textContent = 'Premium Plan: Minimum Deposit $1,000,000, 20% Monthly ROI';
-            investmentInput.min = 1000000;
-          } else if (plan === 'cooperative') {
-            planInfo.textContent = 'Cooperative Plan: Minimum Deposit $1, 5% Monthly ROI (Processed in Batches)';
-            investmentInput.min = 1;
-          }
-        } else {
-          planInfo.textContent = 'No plan selected. Please choose a plan from the homepage.';
-          submitBtn.disabled = true;
-        }
-
-        // Progress bar animation
-        const inputs = document.querySelectorAll('#initial-form .input-field');
-        inputs.forEach(input => {
-          input.addEventListener('input', () => {
-            try {
-              const filledInputs = Array.from(inputs).filter(i => i.value).length;
-              const progress = (filledInputs / inputs.length) * 100;
-              progressBar.style.width = `${progress}%`;
-            } catch (e) {
-              console.error('Error updating progress bar:', e);
-              showError('initial-form', 'error-message', 'Error updating form progress. Please try again.');
-            }
+      function toggleTheme() {
+        try {
+          const isLightTheme = document.documentElement.classList.toggle('light-theme');
+          themeToggle.textContent = isLightTheme ? '🌞' : '🌙';
+          localStorage.setItem('theme', isLightTheme ? 'light' : 'dark');
+          document.querySelectorAll('.text-contrast').forEach(element => {
+            element.style.color = isLightTheme ? '#1f2937' : '#e0e7ff';
           });
-        });
-
-        // Calculate projected returns
-        function calculateROI(investment, plan) {
-          try {
-            if (isNaN(investment) || investment <= 0) {
-              throw new Error('Invalid investment amount');
-            }
-            const roiRates = { free: 0.10, premium: 0.20, cooperative: 0.05 };
-            const monthlyRate = roiRates[plan] || 0;
-            if (monthlyRate === 0) {
-              throw new Error('Invalid plan selected');
-            }
-            const months = [0, 1, 2, 3, 4, 5, 6];
-            return months.map(month => {
-              return investment * Math.pow(1 + monthlyRate, month);
-            });
-          } catch (e) {
-            console.error('Error calculating ROI:', e);
-            showError('dashboard-tabs', 'error-message', 'Error calculating projected returns.');
-            return [investment || 0, 0, 0, 0, 0, 0, 0];
-          }
-        }
-
-        // Calculate current balance based on activation date
-        function calculateCurrentBalance(investment, plan, activationDate) {
-          try {
-            const roiRates = { free: 0.10, premium: 0.20, cooperative: 0.05 };
-            const monthlyRate = roiRates[plan] || 0;
-            if (monthlyRate === 0) {
-              throw new Error('Invalid plan for balance calculation');
-            }
-            const now = new Date();
-            const monthsSinceActivation = (now - activationDate) / (1000 * 60 * 60 * 24 * 30);
-            return investment * Math.pow(1 + monthlyRate, Math.floor(monthsSinceActivation));
-          } catch (e) {
-            console.error('Error calculating current balance:', e);
-            return investment || 0;
-          }
-        }
-
-        // Initialize ROI chart
-        function initROIChart(investment, plan) {
-          try {
-            if (!window.Chart) {
-              throw new Error('Chart.js not loaded');
-            }
-            const ctx = document.getElementById('roi-chart')?.getContext('2d');
-            if (!ctx) {
-              throw new Error('Canvas context not found');
-            }
-            if (roiChart) {
-              roiChart.destroy();
-            }
-            const data = calculateROI(investment, plan);
-            roiChart = new Chart(ctx, {
-              type: 'line',
-              data: {
-                labels: ['Initial', 'Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'],
-                datasets: [{
-                  label: 'Projected Balance (USD)',
-                  data: data,
-                  borderColor: document.documentElement.classList.contains('light-theme') ? '#0284c7' : '#00eaff',
-                  backgroundColor: document.documentElement.classList.contains('light-theme') ? 'rgba(2, 132, 199, 0.2)' : 'rgba(0, 229, 255, 0.2)',
-                  fill: true,
-                  tension: 0.3
-                }]
+          if (window.particlesJS) {
+            particlesJS('particles-js', {
+              particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: isLightTheme ? '#0284c7' : '#00eaff' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
+                line_linked: { enable: true, distance: 150, color: isLightTheme ? '#0284c7' : '#00eaff', opacity: 0.4, width: 2 },
+                move: { speed: 2, direction: 'none', random: true }
               },
-              options: {
-                responsive: true,
-                scales: {
-                  y: {
-                    beginAtZero: false,
-                    ticks: {
-                      callback: function(value) {
-                        return '$' + value.toLocaleString();
-                      },
-                      color: document.documentElement.classList.contains('light-theme') ? '#1f2937' : '#e0e7ff'
+              interactivity: {
+                detect_on: 'canvas',
+                events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
+                modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
+              }
+            });
+          }
+          if (window.roiChart && roiModal.style.display === 'flex') {
+            setTimeout(() => {
+              console.log('Reinitializing ROI chart after theme toggle');
+              initROIChart(userData.investment || 80000, userData.plan || 'free', planSelector.value);
+            }, 100);
+          }
+        } catch (e) {
+          console.error('Error toggling theme:', e);
+          showError('initial-form', 'error-message', 'Failed to toggle theme.');
+        }
+      }
+
+      if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.add('light-theme');
+        themeToggle.textContent = '🌞';
+        document.querySelectorAll('.text-contrast').forEach(element => {
+          element.style.color = '#1f2937';
+        });
+      }
+
+      themeToggle.addEventListener('click', toggleTheme);
+
+      if (plan) {
+        if (plan === 'free') {
+          planInfo.textContent = 'Free Plan: Minimum Deposit $80,000, 10% Monthly ROI';
+          investmentInput.min = 80000;
+        } else if (plan === 'premium') {
+          planInfo.textContent = 'Premium Plan: Minimum Deposit $1,000,000, 20% Monthly ROI';
+          investmentInput.min = 1000000;
+        } else if (plan === 'cooperative') {
+          planInfo.textContent = 'Cooperative Plan: Minimum Deposit $1, 5% Monthly ROI (Processed in Batches)';
+          investmentInput.min = 1;
+        }
+      } else {
+        planInfo.textContent = 'No plan selected. Please choose a plan from the homepage.';
+        submitBtn.disabled = true;
+      }
+
+      const inputs = document.querySelectorAll('#initial-form .input-field');
+      inputs.forEach(input => {
+        input.addEventListener('input', () => {
+          try {
+            const filledInputs = Array.from(inputs).filter(i => i.value).length;
+            const progress = (filledInputs / inputs.length) * 100;
+            progressBar.style.width = `${progress}%`;
+          } catch (e) {
+            console.error('Error updating progress bar:', e);
+            showError('initial-form', 'error-message', 'Error updating form progress. Please try again.');
+          }
+        });
+      });
+
+      function calculateROI(investment, plan) {
+        try {
+          if (isNaN(investment) || investment <= 0) {
+            console.warn('Invalid investment amount, using default: 80000');
+            investment = 80000;
+          }
+          if (!['free', 'premium', 'cooperative'].includes(plan)) {
+            console.warn('Invalid plan, using default: free');
+            plan = 'free';
+          }
+          const roiRates = { free: 0.10, premium: 0.20, cooperative: 0.05 };
+          const monthlyRate = roiRates[plan];
+          const months = [1, 6, 12];
+          const data = months.map(month => ({
+            month,
+            value: investment * Math.pow(1 + monthlyRate, month)
+          }));
+          console.log('ROI calculation:', { investment, plan, data });
+          return data;
+        } catch (e) {
+          console.error('Error calculating ROI:', e);
+          showError('roi-modal', 'roi-error', 'Error calculating projected returns. Using default values.');
+          return [
+            { month: 1, value: investment || 80000 },
+            { month: 6, value: (investment || 80000) * 1.5 },
+            { month: 12, value: (investment || 80000) * 2 }
+          ];
+        }
+      }
+
+      function calculateCurrentBalance(investment, plan, activationDate) {
+        try {
+          const roiRates = { free: 0.10, premium: 0.20, cooperative: 0.05 };
+          const monthlyRate = roiRates[plan] || 0;
+          if (monthlyRate === 0) {
+            throw new Error('Invalid plan for balance calculation');
+          }
+          const now = new Date();
+          const monthsSinceActivation = (now - activationDate) / (1000 * 60 * 60 * 24 * 30);
+          return investment * Math.pow(1 + monthlyRate, Math.floor(monthsSinceActivation));
+        } catch (e) {
+          console.error('Error calculating current balance:', e);
+          return investment || 0;
+        }
+      }
+
+      function initROIChart(investment, plan, selectedPlan = plan, retryCount = 0) {
+        console.log('Initializing ROI chart with:', { investment, plan, selectedPlan, retryCount });
+        try {
+          if (!window.Chart) {
+            if (retryCount < 3) {
+              console.warn('Chart.js not loaded, retrying... Attempt:', retryCount + 1);
+              setTimeout(() => initROIChart(investment, plan, selectedPlan, retryCount + 1), 500);
+              return;
+            }
+            throw new Error('Chart.js is not loaded after retries');
+          }
+          const canvas = document.getElementById('roi-chart');
+          if (!canvas) {
+            throw new Error('ROI chart canvas element not found');
+          }
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            throw new Error('Canvas 2D context not available');
+          }
+          canvas.style.display = 'block';
+          canvas.style.visibility = 'visible';
+          canvas.width = canvas.parentElement.offsetWidth || 600;
+          canvas.height = 300;
+          if (window.roiChart) {
+            console.log('Destroying existing ROI chart');
+            window.roiChart.destroy();
+            window.roiChart = null;
+          }
+          const data = calculateROI(investment, selectedPlan);
+          if (!data || !data.length) {
+            throw new Error('Invalid ROI data');
+          }
+          const isLightTheme = document.documentElement.classList.contains('light-theme');
+          const borderColor = isLightTheme ? '#0284c7' : '#00eaff';
+          const backgroundColor = isLightTheme ? 'rgba(2, 132, 199, 0.2)' : 'rgba(0, 229, 255, 0.2)';
+          const textColor = isLightTheme ? '#1f2937' : '#e0e7ff';
+          const gridColor = isLightTheme ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)';
+          window.roiChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: ['1 Month', '6 Months', '12 Months'],
+              datasets: [{
+                label: `Projected Balance (${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)})`,
+                data: data.map(item => item.value),
+                borderColor: borderColor,
+                backgroundColor: backgroundColor,
+                fill: true,
+                tension: 0.3
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  beginAtZero: false,
+                  ticks: {
+                    callback: function(value) {
+                      return '$' + value.toLocaleString();
                     },
-                    grid: { color: document.documentElement.classList.contains('light-theme') ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)' }
+                    color: textColor
                   },
-                  x: {
-                    ticks: { color: document.documentElement.classList.contains('light-theme') ? '#1f2937' : '#e0e7ff' },
-                    grid: { color: document.documentElement.classList.contains('light-theme') ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)' }
-                  }
+                  grid: { color: gridColor }
                 },
-                plugins: {
-                  legend: { labels: { color: document.documentElement.classList.contains('light-theme') ? '#1f2937' : '#e0e7ff' } },
-                  tooltip: {
-                    callbacks: {
-                      label: function(context) {
-                        return '$' + context.parsed.y.toLocaleString();
-                      }
+                x: {
+                  ticks: { color: textColor },
+                  grid: { color: gridColor }
+                }
+              },
+              plugins: {
+                legend: { labels: { color: textColor } },
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      return '$' + context.parsed.y.toLocaleString();
                     }
                   }
                 }
               }
-            });
-          } catch (e) {
-            console.error('Error initializing ROI chart:', e);
-            showError('dashboard-tabs', 'error-message', 'Failed to display projected returns chart.');
-          }
-        }
-
-        // Simulate BTC price fetch
-        function updateBtcPrice() {
-          try {
-            const basePrice = 70000;
-            const fluctuation = (Math.random() - 0.5) * 1000;
-            const newPrice = basePrice + fluctuation;
-            btcPrice.textContent = `$${newPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            btcPriceTimestamp.textContent = new Date().toLocaleString();
-          } catch (e) {
-            console.error('Error updating BTC price:', e);
-            showError('portfolio', 'error-message', 'Failed to update BTC price.');
-          }
-        }
-
-        // Initialize BTC price
-        updateBtcPrice();
-
-        // Export transaction history as CSV
-        function exportToCsv() {
-          try {
-            const headers = ['Date', 'Wallet Address', 'Amount (USD)', 'Status'];
-            const rows = userData.transactions.map(tx => [
-              tx.date,
-              tx.walletAddress,
-              tx.amount,
-              tx.status
-            ]);
-            const csvContent = [
-              headers.join(','),
-              ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-            ].join('\n');
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'transaction_history.csv');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-          } catch (e) {
-            console.error('Error exporting CSV:', e);
-            showError('transactions', 'error-message', 'Failed to export transaction history.');
-          }
-        }
-
-        // Simulate 2FA code generation
-        function generate2faCode() {
-          return Math.floor(100000 + Math.random() * 900000).toString();
-        }
-
-        // Simulate sending 2FA code
-        function send2faCode(email, context = 'login') {
-          try {
-            simulated2faCode = generate2faCode();
-            console.log(`Simulated 2FA code for ${context}: ${simulated2faCode} sent to ${email}`);
-            alert(`A 6-digit code has been sent to ${email}. (Simulated code: ${simulated2faCode})`);
-          } catch (e) {
-            console.error(`Error sending 2FA code for ${context}:`, e);
-            showError(context === 'login' ? '2fa-form' : 'withdrawal-2fa-form', context === 'login' ? '2fa-error' : 'withdrawal-2fa-error', `Failed to send ${context} verification code.`);
-          }
-        }
-
-        // Render transaction table
-        function renderTransactionTable(transactions) {
-          try {
-            const shortAddress = walletAddress.textContent.slice(0, 8) + '...' + walletAddress.textContent.slice(-8);
-            transactionTable.innerHTML = transactions.map(tx => `
-              <tr>
-                <td data-label="Date">${tx.date}</td>
-                <td data-label="Wallet Address"><span class="wallet-address" data-full-address="${tx.walletAddress}" onclick="navigator.clipboard.writeText('${tx.walletAddress}'); alert('Wallet address copied to clipboard!')">${shortAddress}</span></td>
-                <td data-label="Amount (USD)">$${tx.amount}</td>
-                <td data-label="Status">${tx.status}</td>
-              </tr>
-            `).join('');
-          } catch (e) {
-            console.error('Error rendering transaction table:', e);
-            showError('transactions', 'error-message', 'Failed to render transaction history.');
-          }
-        }
-
-        // Filter and sort transactions
-        function filterAndSortTransactions() {
-          try {
-            const sortOrder = sortDate.value;
-            const statusFilter = filterStatus.value;
-            let filteredTransactions = [...userData.transactions];
-            if (statusFilter !== 'all') {
-              filteredTransactions = filteredTransactions.filter(tx => tx.status === statusFilter);
             }
-            filteredTransactions.sort((a, b) => {
-              const dateA = new Date(a.date.split('/').reverse().join('-'));
-              const dateB = new Date(b.date.split('/').reverse().join('-'));
-              return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
-            });
-            renderTransactionTable(filteredTransactions);
-          } catch (e) {
-            console.error('Error filtering/sorting transactions:', e);
-            showError('transactions', 'error-message', 'Failed to filter/sort transactions.');
+          });
+          const roiError = document.getElementById('roi-error');
+          if (roiError) {
+            roiError.classList.add('hidden');
           }
+          console.log('ROI chart initialized successfully');
+        } catch (e) {
+          console.error('Error initializing ROI chart:', e);
+          showError('roi-modal', 'roi-error', 'Failed to display ROI chart. Please try refreshing the page.');
         }
+      }
 
-        // Simulated transaction status update
-        function simulateTransactionStatus(investment, plan, email, callback) {
+      function updateBtcPrice() {
+        try {
+          const basePrice = 70000;
+          const fluctuation = (Math.random() - 0.5) * 1000;
+          const newPrice = basePrice + fluctuation;
+          btcPrice.textContent = `$${newPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          btcPriceTimestamp.textContent = new Date().toLocaleString();
+        } catch (e) {
+          console.error('Error updating BTC price:', e);
+          showError('portfolio', 'error-message', 'Failed to update BTC price.');
+        }
+      }
+
+      updateBtcPrice();
+
+      function exportToCsv() {
+        try {
+          const headers = ['Date', 'Wallet Address', 'Amount (USD)', 'Status'];
+          const rows = userData.transactions.map(tx => [
+            tx.date,
+            tx.walletAddress,
+            tx.amount,
+            tx.status
+          ]);
+          const csvContent = [
+            headers.join(','),
+            ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+          ].join('\n');
+          const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.setAttribute('href', url);
+          link.setAttribute('download', 'transaction_history.csv');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        } catch (e) {
+          console.error('Error exporting CSV:', e);
+          showError('transactions', 'error-message', 'Failed to export transaction history.');
+        }
+      }
+
+      function generate2faCode() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+      }
+
+      function send2faCode(email, context = 'login') {
+        try {
+          simulated2faCode = generate2faCode();
+          console.log(`Simulated 2FA code for ${context}: ${simulated2faCode} sent to ${email}`);
+          alert(`A 6-digit code has been sent to ${email}. (Simulated code: ${simulated2faCode})`);
+        } catch (e) {
+          console.error(`Error sending 2FA code for ${context}:`, e);
+          showError(context === 'login' ? '2fa-form' : 'withdrawal-2fa-form', context === 'login' ? '2fa-error' : 'withdrawal-2fa-error', `Failed to send ${context} verification code.`);
+        }
+      }
+
+      function renderTransactionTable(transactions) {
+        try {
+          const shortAddress = walletAddress.textContent.slice(0, 8) + '...' + walletAddress.textContent.slice(-8);
+          transactionTable.innerHTML = transactions.map(tx => `
+            <tr>
+              <td data-label="Date" class="text-contrast">${tx.date}</td>
+              <td data-label="Wallet Address"><span class="wallet-address text-contrast" data-full-address="${tx.walletAddress}" onclick="navigator.clipboard.writeText('${tx.walletAddress}'); alert('Wallet address copied to clipboard!')">${shortAddress}</span></td>
+              <td data-label="Amount (USD)" class="text-contrast">$${tx.amount}</td>
+              <td data-label="Status" class="text-contrast">${tx.status}</td>
+            </tr>
+          `).join('');
+        } catch (e) {
+          console.error('Error rendering transaction table:', e);
+          showError('transactions', 'error-message', 'Failed to render transaction history.');
+        }
+      }
+
+      function filterAndSortTransactions() {
+        try {
+          const sortOrder = sortDate.value;
+          const statusFilter = filterStatus.value;
+          let filteredTransactions = [...userData.transactions];
+          if (statusFilter !== 'all') {
+            filteredTransactions = filteredTransactions.filter(tx => tx.status === statusFilter);
+          }
+          filteredTransactions.sort((a, b) => {
+            const dateA = new Date(a.date.split('/').reverse().join('-'));
+            const dateB = new Date(b.date.split('/').reverse().join('-'));
+            return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+          });
+          renderTransactionTable(filteredTransactions);
+        } catch (e) {
+          console.error('Error filtering/sorting transactions:', e);
+          showError('transactions', 'error-message', 'Failed to filter/sort transactions.');
+        }
+      }
+
+      function simulateTransactionStatus(investment, plan, email, callback) {
+        try {
+          setTimeout(() => {
+            if (txStatus && txConfirmations) {
+              txStatus.textContent = 'Processing';
+              txStatus.className = 'status-processing';
+              txConfirmations.textContent = '1';
+              if (walletInfo) walletInfo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 5000);
+          setTimeout(() => {
+            if (txStatus && txConfirmations) {
+              txStatus.textContent = 'Processing';
+              txStatus.className = 'status-processing';
+              txConfirmations.textContent = '2';
+            }
+          }, 8000);
+          setTimeout(() => {
+            if (txStatus && txConfirmations && initialForm && verifyForm) {
+              txStatus.textContent = 'Verified';
+              txStatus.className = 'status-verified';
+              txConfirmations.textContent = '3';
+              initialForm.classList.add('hidden');
+              walletInfo.classList.add('hidden');
+              verifyForm.classList.remove('hidden');
+              verifyForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              userData.email = email;
+              userData.plan = plan;
+              userData.investment = investment;
+              userData.activationDate = new Date();
+              userData.transactions = [{
+                date: new Date().toLocaleDateString(),
+                walletAddress: walletAddress.textContent,
+                amount: investment.toLocaleString(),
+                status: 'Verified'
+              }];
+              callback();
+              alert('Payment verified! Please set up your account to access the dashboard.');
+            }
+          }, 10000);
+        } catch (e) {
+          console.error('Error in transaction status simulation:', e);
+          showError('initial-form', 'error-message', 'Error updating transaction status.');
+        }
+      }
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
           try {
-            setTimeout(() => {
-              if (txStatus && txConfirmations) {
-                txStatus.textContent = 'Processing';
-                txStatus.className = 'status-processing';
-                txConfirmations.textContent = '1';
-                if (walletInfo) walletInfo.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }
-            }, 5000);
-            setTimeout(() => {
-              if (txStatus && txConfirmations) {
-                txStatus.textContent = 'Processing';
-                txStatus.className = 'status-processing';
-                txConfirmations.textContent = '2';
-              }
-            }, 8000);
-            setTimeout(() => {
-              if (txStatus && txConfirmations && initialForm && loginForm) {
-                txStatus.textContent = 'Verified';
-                txStatus.className = 'status-verified';
-                txConfirmations.textContent = '3';
-                initialForm.classList.add('hidden');
-                walletInfo.classList.add('hidden');
-                loginForm.classList.remove('hidden');
-                loginForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                userData.email = email;
-                userData.plan = plan;
-                userData.investment = investment;
-                userData.activationDate = new Date();
-                userData.transactions = [{
-                  date: new Date().toLocaleDateString(),
-                  walletAddress: walletAddress.textContent,
-                  amount: investment.toLocaleString(),
-                  status: 'Verified'
-                }];
-                callback();
-                alert('Payment verified! Please set up your account to access the dashboard.');
-              }
-            }, 10000);
-          } catch (e) {
-            console.error('Error in transaction status simulation:', e);
-            showError('initial-form', 'error-message', 'Error updating transaction status.');
-          }
-        }
-
-        // Tab switching logic
-        tabs.forEach(tab => {
-          tab.addEventListener('click', () => {
-            try {
-              tabs.forEach(t => t.classList.remove('active'));
-              tabContents.forEach(c => c.classList.remove('active'));
-              tab.classList.add('active');
+            tabs.forEach(t => t.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            tab.classList.add('active');
+            if (tab.dataset.tab === 'roi') {
+              roiModal.style.display = 'flex';
+              planSelector.value = userData.plan || 'free';
+              setTimeout(() => {
+                console.log('Preparing canvas for ROI chart');
+                const canvas = document.getElementById('roi-chart');
+                if (canvas) {
+                  canvas.style.display = 'block';
+                  canvas.style.visibility = 'visible';
+                  canvas.width = canvas.parentElement.offsetWidth || 600;
+                  canvas.height = 300;
+                  initROIChart(userData.investment || 80000, userData.plan || 'free', planSelector.value);
+                  console.log('ROI chart initialization triggered');
+                } else {
+                  throw new Error('ROI chart canvas not found');
+                }
+                roiModal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }, 100);
+            } else {
+              roiModal.style.display = 'none';
               document.getElementById(tab.dataset.tab).classList.add('active');
               if (tab.dataset.tab === 'transactions') {
                 filterAndSortTransactions();
               }
-            } catch (e) {
-              console.error('Error switching tabs:', e);
-              showError('dashboard-tabs', 'error-message', 'Error switching tabs.');
-            }
-          });
-        });
-
-        // Show login form
-        showLoginBtn.addEventListener('click', () => {
-          try {
-            initialForm.classList.add('hidden');
-            loginForm.classList.remove('hidden');
-            loginForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          } catch (e) {
-            console.error('Error showing login form:', e);
-            showError('initial-form', 'error-message', 'Error accessing login form.');
-          }
-        });
-
-        // Form submission handler
-        submitBtn.addEventListener('click', () => {
-          try {
-            const firstName = document.getElementById('firstName')?.value.trim();
-            const lastName = document.getElementById('lastName')?.value.trim();
-            const email = document.getElementById('email')?.value.trim();
-            const investment = parseFloat(document.getElementById('investment')?.value);
-
-            if (!firstName || !lastName || !email || isNaN(investment) || investment <= 0) {
-              alert('Please fill in all fields with valid values.');
-              return;
-            }
-
-            if (plan === 'free' && investment < 10000) {
-              alert('Investment amount must be at least $10,000 for the Free Plan.');
-              return;
-            } else if (plan === 'premium' && investment < 1000000) {
-              alert('Investment amount must be at least $1,000,000 for the Premium Plan.');
-              return;
-            } else if (plan === 'cooperative' && investment < 1) {
-              alert('Investment amount must be at least $1 for the Cooperative Plan.');
-              return;
-            }
-
-            submitBtn.classList.add('hidden');
-            showLoginBtn.classList.add('hidden');
-            loading.classList.remove('hidden');
-            errorMessage.classList.add('hidden');
-
-            setTimeout(() => {
-              loading.classList.add('hidden');
-              submitBtn.classList.remove('hidden');
-              showLoginBtn.classList.remove('hidden');
-              alert(`A verification email has been sent to ${email}. Please verify your email to proceed.`);
-
-              walletAddress.textContent = 'bc1q5autw3efgqu6y2nz7tz6ge3sacyd098xeqyqcp';
-              walletInfo.classList.remove('hidden');
-              walletInfo.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-              simulateTransactionStatus(investment, plan, email, () => {
-                setTimeout(() => {
-                  alert('Email verified! Please set up your account.');
-                }, 2000);
-              });
-            }, 2000);
-          } catch (e) {
-            console.error('Error in form submission:', e);
-            showError('initial-form', 'error-message', 'An error occurred during submission. Please try again.');
-            loading.classList.add('hidden');
-            submitBtn.classList.remove('hidden');
-            showLoginBtn.classList.remove('hidden');
-          }
-        });
-
-        // Login handler
-        loginBtn.addEventListener('click', () => {
-          try {
-            console.log('Login button clicked');
-            if (!loginEmailInput || !passwordInput || !confirmPasswordInput) {
-              console.error('Login form inputs missing:', { loginEmailInput, passwordInput, confirmPasswordInput });
-              showError('login-form', 'login-error', 'Login form elements are missing. Please refresh the page.');
-              return;
-            }
-
-            const loginEmail = loginEmailInput.value.trim();
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
-
-            console.log('Login input values:', { loginEmail, password, confirmPassword });
-
-            if (!loginEmail || !password || !confirmPassword) {
-              console.warn('Login fields incomplete');
-              showError('login-form', 'login-error', 'Please fill in all fields.');
-              return;
-            }
-
-            if (loginEmail !== userData.email) {
-              console.warn('Email mismatch:', { loginEmail, userEmail: userData.email });
-              showError('login-form', 'login-error', 'Email does not match the one used for payment verification.');
-              return;
-            }
-
-            if (password !== confirmPassword) {
-              console.warn('Passwords do not match');
-              showError('login-form', 'login-error', 'Passwords do not match.');
-              return;
-            }
-
-            if (password !== userData.password) {
-              console.warn('Incorrect password');
-              showError('login-form', 'login-error', 'Incorrect password.');
-              return;
-            }
-
-            if (!twoFaForm) {
-              console.error('2FA form element missing');
-              showError('login-form', 'login-error', '2FA form is unavailable. Please refresh the page.');
-              return;
-            }
-
-            userData.password = password; // In production, hash the password
-            loginForm.classList.add('hidden');
-            twoFaForm.classList.remove('hidden');
-            twoFaForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            send2faCode(loginEmail, 'login');
-            console.log('Login successful, proceeding to 2FA');
-          } catch (e) {
-            console.error('Error in login handler:', e);
-            showError('login-form', 'login-error', 'An error occurred during login. Please try again.');
-          }
-        });
-
-        // 2FA verification handler
-        twoFaVerifyBtn.addEventListener('click', () => {
-          try {
-            const code = twoFaCode.value.trim();
-            if (!code || code.length !== 6 || code !== simulated2faCode) {
-              showError('2fa-form', '2fa-error', 'Invalid or incorrect verification code.');
-              return;
-            }
-
-            twoFaForm.classList.add('hidden');
-            dashboardTabs.classList.remove('hidden');
-            dashboardTabs.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-            portfolioPlan.textContent = userData.plan.charAt(0).toUpperCase() + userData.plan.slice(1);
-            portfolioInvestment.textContent = `$${userData.investment.toLocaleString()}`;
-            portfolioBalance.textContent = `$${calculateCurrentBalance(userData.investment, userData.plan, userData.activationDate).toLocaleString()}`;
-            renderTransactionTable(userData.transactions);
-            initROIChart(userData.investment, userData.plan);
-            alert('2FA verified! Welcome to your dashboard.');
-          } catch (e) {
-            console.error('Error in 2FA verification:', e);
-            showError('2fa-form', '2fa-error', 'An error occurred during 2FA verification. Please try again.');
-          }
-        });
-
-        // Resend 2FA code
-        twoFaResendBtn.addEventListener('click', () => {
-          try {
-            send2faCode(userData.email, 'login');
-          } catch (e) {
-            console.error('Error resending 2FA code:', e);
-            showError('2fa-form', '2fa-error', 'Failed to resend verification code.');
-          }
-        });
-
-        // Withdrawal handler
-        withdrawalBtn.addEventListener('click', () => {
-          try {
-            const amount = parseFloat(withdrawalAmount.value);
-            const address = withdrawalAddress.value.trim();
-
-            if (isNaN(amount) || amount <= 0) {
-              showError('settings', 'settings-error', 'Please enter a valid withdrawal amount.');
-              return;
-            }
-
-            if (!address || !address.startsWith('bc1')) {
-              showError('settings', 'settings-error', 'Please enter a valid Bitcoin wallet address.');
-              return;
-            }
-
-            withdrawalBtn.classList.add('hidden');
-            withdrawal2faForm.classList.remove('hidden');
-            withdrawal2faForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            send2faCode(userData.email, 'withdrawal');
-            userData.pendingWithdrawal = { amount, address };
-          } catch (e) {
-            console.error('Error in withdrawal request:', e);
-            showError('settings', 'settings-error', 'An error occurred during withdrawal request. Please try again.');
-          }
-        });
-
-        // Withdrawal 2FA verification handler
-        withdrawal2faVerifyBtn.addEventListener('click', () => {
-          try {
-            const code = withdrawal2faCode.value.trim();
-            if (!code || code.length !== 6 || code !== simulated2faCode) {
-              showError('withdrawal-2fa-form', 'withdrawal-2fa-error', 'Invalid or incorrect verification code.');
-              return;
-            }
-
-            withdrawal2faForm.classList.add('hidden');
-            withdrawalBtn.classList.remove('hidden');
-            userData.transactions.push({
-              date: new Date().toLocaleDateString(),
-              walletAddress: userData.pendingWithdrawal.address,
-              amount: userData.pendingWithdrawal.amount.toLocaleString(),
-              status: 'Pending'
-            });
-            withdrawalAmount.value = '';
-            withdrawalAddress.value = '';
-            delete userData.pendingWithdrawal;
-            alert('Withdrawal request submitted! It will be processed within 3-5 business days.');
-            tabs.forEach(t => t.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            document.querySelector('[data-tab="transactions"]').classList.add('active');
-            document.getElementById('transactions').classList.add('active');
-            filterAndSortTransactions();
-          } catch (e) {
-            console.error('Error in withdrawal 2FA verification:', e);
-            showError('withdrawal-2fa-form', 'withdrawal-2fa-error', 'An error occurred during withdrawal verification. Please try again.');
-          }
-        });
-
-        // Resend withdrawal 2FA code
-        withdrawal2faResendBtn.addEventListener('click', () => {
-          try {
-            send2faCode(userData.email, 'withdrawal');
-          } catch (e) {
-            console.error('Error resending withdrawal 2FA code:', e);
-            showError('withdrawal-2fa-form', 'withdrawal-2fa-error', 'Failed to resend withdrawal verification code.');
-          }
-        });
-
-        // Filter and sort event listeners
-        sortDate.addEventListener('change', filterAndSortTransactions);
-        filterStatus.addEventListener('change', filterAndSortTransactions);
-
-        // Settings update handler
-        updateSettingsBtn.addEventListener('click', () => {
-          try {
-            const newEmail = settingsEmail.value.trim();
-            const newPassword = settingsPassword.value;
-            const confirmNewPassword = settingsConfirmPassword.value;
-
-            if (!newEmail && !newPassword && !confirmNewPassword) {
-              showError('settings', 'settings-error', 'Please fill in at least one field to update.');
-              return;
-            }
-
-            if (newEmail && newEmail !== userData.email) {
-              userData.email = newEmail;
-              settingsEmail.value = '';
-              alert('Email updated successfully.');
-            }
-
-            if (newPassword && newPassword !== confirmNewPassword) {
-              showError('settings', 'settings-error', 'Passwords do not match.');
-              return;
-            }
-
-            if (newPassword) {
-              userData.password = newPassword; // In production, hash the password
-              settingsPassword.value = '';
-              settingsConfirmPassword.value = '';
-              alert('Password updated successfully.');
             }
           } catch (e) {
-            console.error('Error updating settings:', e);
-            showError('settings', 'settings-error', 'An error occurred while updating settings. Please try again.');
-          }
-        });
-
-        // Logout handler
-        logoutBtn.addEventListener('click', () => {
-          try {
-            userData = { email: null, password: null, plan: null, investment: null, activationDate: null, transactions: [] };
-            dashboardTabs.classList.add('hidden');
-            initialForm.classList.remove('hidden');
-            inputs.forEach(input => input.value = '');
-            progressBar.style.width = '0%';
-            initialForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            alert('Logged out successfully.');
-          } catch (e) {
-            console.error('Error during logout:', e);
-            showError('settings', 'settings-error', 'An error occurred during logout. Please try again.');
-          }
-        });
-
-        // Refresh BTC price handler
-        refreshPriceBtn.addEventListener('click', () => {
-          try {
-            updateBtcPrice();
-            alert('BTC price refreshed.');
-          } catch (e) {
-            console.error('Error refreshing BTC price:', e);
-            showError('portfolio', 'error-message', 'Failed to refresh BTC price.');
-          }
-        });
-
-        // Export CSV handler
-        exportCsvBtn.addEventListener('click', () => {
-          try {
-            if (userData.transactions.length === 0) {
-              showError('transactions', 'error-message', 'No transactions available to export.');
-              return;
-            }
-            exportToCsv();
-            alert('Transaction history exported as CSV.');
-          } catch (e) {
-            console.error('Error exporting CSV:', e);
-            showError('transactions', 'error-message', 'Failed to export transaction history.');
+            console.error('Error switching tabs:', e);
+            showError('dashboard-tabs', 'error-message', 'Error switching tabs.');
           }
         });
       });
-    })();
+
+      sortDate.addEventListener('change', filterAndSortTransactions);
+      filterStatus.addEventListener('change', filterAndSortTransactions);
+
+      roiModalClose.addEventListener('click', () => {
+        try {
+          roiModal.style.display = 'none';
+          tabs.forEach(t => t.classList.remove('active'));
+          tabContents.forEach(c => c.classList.remove('active'));
+          document.querySelector('[data-tab="portfolio"]').classList.add('active');
+          document.getElementById('portfolio').classList.add('active');
+        } catch (e) {
+          console.error('Error closing ROI modal:', e);
+          showError('roi-modal', 'roi-error', 'Error closing ROI projections.');
+        }
+      });
+
+      planSelector.addEventListener('change', () => {
+        try {
+          console.log('Plan selector changed, reinitializing ROI chart');
+          const canvas = document.getElementById('roi-chart');
+          if (canvas) {
+            canvas.style.display = 'block';
+            canvas.style.visibility = 'visible';
+            canvas.width = canvas.parentElement.offsetWidth || 600;
+            canvas.height = 300;
+          }
+          initROIChart(userData.investment || 80000, userData.plan || 'free', planSelector.value);
+        } catch (e) {
+          console.error('Error updating ROI chart:', e);
+          showError('roi-modal', 'roi-error', 'Failed to update ROI chart.');
+        }
+      });
+
+      refreshPageBtn.addEventListener('click', () => {
+        console.log('Refresh Chart button clicked');
+        try {
+          const investment = userData.investment || 80000;
+          const selectedPlan = planSelector.value || userData.plan || 'free';
+          console.log('Refreshing ROI chart with:', { investment, selectedPlan });
+          const canvas = document.getElementById('roi-chart');
+          if (canvas) {
+            canvas.style.display = 'block';
+            canvas.style.visibility = 'visible';
+            canvas.width = canvas.parentElement.offsetWidth || 600;
+            canvas.height = 300;
+          }
+          initROIChart(investment, userData.plan || 'free', selectedPlan);
+          const roiError = document.getElementById('roi-error');
+          if (roiError) {
+            roiError.classList.add('hidden');
+          }
+          roiModal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          console.log('ROI chart refreshed successfully');
+        } catch (e) {
+          console.error('Error refreshing ROI chart:', e);
+          showError('roi-modal', 'roi-error', 'Failed to refresh ROI chart. Please try again.');
+        }
+      });
+
+      logoutBtn.addEventListener('click', () => {
+        console.log('Logout button clicked');
+        try {
+          console.log('Hiding dashboard elements');
+          dashboardTabs.classList.add('hidden');
+          walletInfo.classList.add('hidden');
+          loginForm.classList.add('hidden');
+          verifyForm.classList.add('hidden');
+          twoFaForm.classList.add('hidden');
+          withdrawal2faForm.classList.add('hidden');
+          roiModal.style.display = 'none';
+
+          console.log('Showing initial form');
+          initialForm.classList.remove('hidden');
+
+          console.log('Resetting userData');
+          userData = {
+            email: null,
+            password: null,
+            plan: null,
+            investment: null,
+            activationDate: null,
+            transactions: []
+          };
+
+          console.log('Clearing form inputs');
+          ['firstName', 'lastName', 'email', 'investment', 'login-email', 'login-password', 
+           'verify-email', 'verify-password', 'verify-confirm-password', '2fa-code', 
+           'settings-email', 'settings-password', 'settings-confirm-password', 
+           'withdrawal-amount', 'withdrawal-address', 'withdrawal-2fa-code'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.value = '';
+          });
+
+          console.log('Resetting UI elements');
+          progressBar.style.width = '0%';
+          transactionTable.innerHTML = '';
+          portfolioPlan.textContent = '';
+          portfolioInvestment.textContent = '';
+          portfolioBalance.textContent = '';
+
+          if (window.roiChart) {
+            console.log('Destroying ROI chart');
+            window.roiChart.destroy();
+            window.roiChart = null;
+          }
+
+          console.log('Clearing localStorage');
+          const theme = localStorage.getItem('theme');
+          localStorage.clear();
+          if (theme) localStorage.setItem('theme', theme);
+
+          tabs.forEach(t => t.classList.remove('active'));
+          tabContents.forEach(c => c.classList.remove('active'));
+          document.querySelector('[data-tab="portfolio"]').classList.add('active');
+          document.getElementById('portfolio').classList.add('active');
+
+          console.log('Scrolling to initial form');
+          initialForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+          console.log('Logout successful');
+          alert('Logged out successfully.');
+        } catch (e) {
+          console.error('Error in logout:', e);
+          showError('settings', 'settings-error', 'Failed to logout. Please try again.');
+        }
+      });
+
+      showLoginBtn.addEventListener('click', () => {
+        try {
+          initialForm.classList.add('hidden');
+          loginForm.classList.remove('hidden');
+          loginForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (e) {
+          console.error('Error showing login form:', e);
+          showError('initial-form', 'error-message', 'Error accessing login form.');
+        }
+      });
+
+      submitBtn.addEventListener('click', () => {
+        try {
+          const firstName = document.getElementById('firstName')?.value.trim();
+          const lastName = document.getElementById('lastName')?.value.trim();
+          const email = document.getElementById('email')?.value.trim();
+          const investment = parseFloat(document.getElementById('investment')?.value);
+          if (!firstName || !lastName || !email || isNaN(investment) || investment <= 0) {
+            alert('Please fill in all fields with valid values.');
+            return;
+          }
+          if (plan === 'free' && investment < 80000) {
+            alert('Investment amount must be at least $80,000 for the Free Plan.');
+            return;
+          } else if (plan === 'premium' && investment < 1000000) {
+            alert('Investment amount must be at least $1,000,000 for the Premium Plan.');
+            return;
+          } else if (plan === 'cooperative' && investment < 1) {
+            alert('Investment amount must be at least $1 for the Cooperative Plan.');
+            return;
+          }
+          submitBtn.classList.add('hidden');
+          showLoginBtn.classList.add('hidden');
+          loading.classList.remove('hidden');
+          errorMessage.classList.add('hidden');
+          setTimeout(() => {
+            loading.classList.add('hidden');
+            submitBtn.classList.remove('hidden');
+            showLoginBtn.classList.remove('hidden');
+            alert(`A verification email has been sent to ${email}. Please verify your email to proceed.`);
+            walletAddress.textContent = 'bc1q5autw3efgqu6y2nz7tz6ge3sacyd098xeqyqcp';
+            walletInfo.classList.remove('hidden');
+            walletInfo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            simulateTransactionStatus(investment, plan, email, () => {
+              setTimeout(() => {
+                alert('Email verified! Please set up your account.');
+              }, 2000);
+            });
+          }, 2000);
+        } catch (e) {
+          console.error('Error in form submission:', e);
+          showError('initial-form', 'error-message', 'An error occurred during submission. Please try again.');
+          loading.classList.add('hidden');
+          submitBtn.classList.remove('hidden');
+          showLoginBtn.classList.remove('hidden');
+        }
+      });
+
+      loginBtn.addEventListener('click', () => {
+        try {
+          console.log('Login button clicked');
+          if (!loginEmailInput || !loginPasswordInput) {
+            throw new Error('Login form inputs missing');
+          }
+          const loginEmail = loginEmailInput.value.trim();
+          const password = loginPasswordInput.value;
+          if (!loginEmail || !password) {
+            showError('login-form', 'login-error', 'Please fill in all fields.');
+            return;
+          }
+          if (loginEmail !== userData.email) {
+            showError('login-form', 'login-error', 'Email does not match the one used for payment verification.');
+            return;
+          }
+          if (password !== userData.password) {
+            showError('login-form', 'login-error', 'Incorrect password.');
+            return;
+          }
+          loginForm.classList.add('hidden');
+          twoFaForm.classList.remove('hidden');
+          twoFaForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          send2faCode(loginEmail, 'login');
+        } catch (e) {
+          console.error('Error in login handler:', e);
+          showError('login-form', 'login-error', 'An error occurred during login. Please try again.');
+        }
+      });
+
+      verifyBtn.addEventListener('click', () => {
+        try {
+          console.log('Verify button clicked');
+          if (!verifyEmailInput || !verifyPasswordInput || !verifyConfirmPasswordInput) {
+            throw new Error('Verify form inputs missing');
+          }
+          const verifyEmail = verifyEmailInput.value.trim();
+          const password = verifyPasswordInput.value;
+          const confirmPassword = verifyConfirmPasswordInput.value;
+          if (!verifyEmail || !password || !confirmPassword) {
+            showError('verify-form', 'verify-error', 'Please fill in all fields.');
+            return;
+          }
+          if (verifyEmail !== userData.email) {
+            showError('verify-form', 'verify-error', 'Email does not match the one used for payment verification.');
+            return;
+          }
+          if (password !== confirmPassword) {
+            showError('verify-form', 'verify-error', 'Passwords do not match.');
+            return;
+          }
+          userData.password = password;
+          verifyForm.classList.add('hidden');
+          twoFaForm.classList.remove('hidden');
+          twoFaForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          send2faCode(verifyEmail, 'verify');
+        } catch (e) {
+          console.error('Error in verify handler:', e);
+          showError('verify-form', 'verify-error', 'An error occurred during verification. Please try again.');
+        }
+      });
+
+      twoFaVerifyBtn.addEventListener('click', () => {
+        try {
+          console.log('2FA Verify button clicked');
+          const code = twoFaCode.value.trim();
+          if (!code || code.length !== 6) {
+            showError('2fa-form', '2fa-error', 'Please enter a valid 6-digit code.');
+            return;
+          }
+          if (code !== simulated2faCode) {
+            showError('2fa-form', '2fa-error', 'Invalid verification code.');
+            return;
+          }
+          twoFaForm.classList.add('hidden');
+          dashboardTabs.classList.remove('hidden');
+          portfolioPlan.textContent = userData.plan.charAt(0).toUpperCase() + userData.plan.slice(1);
+          portfolioInvestment.textContent = `$${userData.investment.toLocaleString()}`;
+          portfolioBalance.textContent = `$${calculateCurrentBalance(userData.investment, userData.plan, userData.activationDate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          filterAndSortTransactions();
+          dashboardTabs.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          alert('2FA verification successful! Welcome to your dashboard.');
+        } catch (e) {
+          console.error('Error in 2FA verification:', e);
+          showError('2fa-form', '2fa-error', 'An error occurred during 2FA verification. Please try again.');
+        }
+      });
+
+      twoFaResendBtn.addEventListener('click', () => {
+        try {
+          console.log('Resend 2FA code button clicked');
+          send2faCode(userData.email, 'login');
+        } catch (e) {
+          console.error('Error resending 2FA code:', e);
+          showError('2fa-form', '2fa-error', 'Failed to resend verification code.');
+        }
+      });
+
+      updateSettingsBtn.addEventListener('click', () => {
+        try {
+          console.log('Update Settings button clicked');
+          const newEmail = settingsEmail.value.trim();
+          const newPassword = settingsPassword.value;
+          const confirmPassword = settingsConfirmPassword.value;
+          if (!newEmail && !newPassword && !confirmPassword) {
+            showError('settings', 'settings-error', 'Please fill in at least one field to update.');
+            return;
+          }
+          if (newPassword && newPassword !== confirmPassword) {
+            showError('settings', 'settings-error', 'Passwords do not match.');
+            return;
+          }
+          if (newEmail) userData.email = newEmail;
+          if (newPassword) userData.password = newPassword;
+          alert('Settings updated successfully.');
+          settingsEmail.value = '';
+          settingsPassword.value = '';
+          settingsConfirmPassword.value = '';
+        } catch (e) {
+          console.error('Error updating settings:', e);
+          showError('settings', 'settings-error', 'Failed to update settings. Please try again.');
+        }
+      });
+
+      withdrawalBtn.addEventListener('click', () => {
+        try {
+          console.log('Withdrawal button clicked');
+          const amount = parseFloat(withdrawalAmount.value);
+          const address = withdrawalAddress.value.trim();
+          if (isNaN(amount) || amount <= 0) {
+            showError('settings', 'settings-error', 'Please enter a valid withdrawal amount.');
+            return;
+          }
+          if (!address) {
+            showError('settings', 'settings-error', 'Please enter a valid Bitcoin wallet address.');
+            return;
+          }
+          settingsError.classList.add('hidden');
+          withdrawal2faForm.classList.remove('hidden');
+          withdrawal2faForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          send2faCode(userData.email, 'withdrawal');
+        } catch (e) {
+          console.error('Error in withdrawal handler:', e);
+          showError('settings', 'settings-error', 'An error occurred during withdrawal request. Please try again.');
+        }
+      });
+
+      withdrawal2faVerifyBtn.addEventListener('click', () => {
+        try {
+          const code = withdrawal2faCode.value.trim();
+          if (!code || code.length !== 6 || code !== simulated2faCode) {
+            showError('withdrawal-2fa-form', 'withdrawal-2fa-error', 'Invalid or incorrect verification code.');
+            return;
+          }
+          withdrawal2faForm.classList.add('hidden');
+          userData.transactions.push({
+            date: new Date().toLocaleDateString(),
+            walletAddress: withdrawalAddress.value,
+            amount: withdrawalAmount.value,
+            status: 'Pending'
+          });
+          renderTransactionTable(userData.transactions);
+          alert('Withdrawal request submitted successfully.');
+          withdrawalAmount.value = '';
+          withdrawalAddress.value = '';
+          withdrawal2faCode.value = '';
+        } catch (e) {
+          console.error('Error in withdrawal 2FA verification:', e);
+          showError('withdrawal-2fa-form', 'withdrawal-2fa-error', 'An error occurred during withdrawal verification. Please try again.');
+        }
+      });
+
+      withdrawal2faResendBtn.addEventListener('click', () => {
+        try {
+          send2faCode(userData.email, 'withdrawal');
+        } catch (e) {
+          console.error('Error resending withdrawal 2FA code:', e);
+          showError('withdrawal-2fa-form', 'withdrawal-2fa-error', 'Failed to resend verification code.');
+        }
+      });
+
+      refreshPriceBtn.addEventListener('click', updateBtcPrice);
+
+      exportCsvBtn.addEventListener('click', exportToCsv);
+    });
   </script>
+
+<div id="roi" class="tab-content">
+  <h2>ROI Projections</h2>
+  <select id="plan-selector">
+    <option value="free">Free</option>
+    <option value="premium">Premium</option>
+    <option value="cooperative">Cooperative</option>
+  </select>
+  <canvas id="roi-chart" width="400" height="200"></canvas>
+  <div id="roi-error" class="error-message hidden"></div>
+</div>
+
+
+<script>
+  function waitForChartJs(callback, retries = 10, delay = 200) {
+    if (typeof Chart !== 'undefined') {
+      callback();
+    } else if (retries > 0) {
+      console.log(`Chart.js not loaded, retrying... Attempt: ${11 - retries}`);
+      setTimeout(() => waitForChartJs(callback, retries - 1, delay), delay);
+    } else {
+      console.error('Chart.js is not loaded after retries');
+      if (document.getElementById('roi-error')) {
+        document.getElementById('roi-error').textContent = 'Failed to display ROI chart. Please try refreshing the page.';
+        document.getElementById('roi-error').classList.remove('hidden');
+      }
+    }
+  }
+</script>
+
 </body>
 </html>
