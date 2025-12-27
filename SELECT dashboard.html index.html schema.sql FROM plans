@@ -1,0 +1,12 @@
+              List of relations
+ Schema |       Name       | Type  |  Owner   
+--------+------------------+-------+----------
+ public | plans            | table | postgres
+ public | portfolio        | table | postgres
+ public | transactions     | table | postgres
+ public | two_factor_auth  | table | postgres
+ public | user_investments | table | postgres
+ public | users            | table | postgres
+ public | withdrawals      | table | postgres
+(7 rows)
+

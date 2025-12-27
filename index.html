@@ -301,6 +301,65 @@
       transform: scale(1.05);
       box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
     }
+    .globe-icon {
+      display: inline-block;
+      width: 1.2em;
+      height: 1.2em;
+      border-radius: 50%;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg') no-repeat center center/cover;
+      animation: spin 6s linear infinite;
+      vertical-align: middle;
+      margin: 0 2px;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    nav {
+      background: linear-gradient(90deg, rgba(0,255,204,0.2), rgba(0,0,0,0.8));
+      height: 70px;
+      border-bottom: 2px solid rgba(0,255,255,0.5);
+      backdrop-filter: blur(10px);
+    }
+    nav .container {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    a.nav-link {
+      position: relative;
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    a.nav-link:hover {
+      color: #00ffcc;
+    }
+    a.nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #00ffcc;
+      transition: width 0.3s;
+    }
+    a.nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-logo {
+      height: 50px;
+      margin-right: 15px;
+      animation: spin 10s linear infinite, glowPulse 2s ease-in-out infinite; /* rotate + glow */
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { filter: drop-shadow(0 0 5px #00ffe0) drop-shadow(0 0 10px #00ffe0); }
+      50% { filter: drop-shadow(0 0 15px #00ffcc) drop-shadow(0 0 30px #00ffcc); }
+    }
   </style>
 </head>
 <body>
@@ -335,18 +394,29 @@
       }
       return gk_fileData[filename] || "";
     }
+    
   </script>
 
   <!-- Navigation -->
   <nav class="bg-gradient-to-r text-primary p-4 fixed w-full top-0 z-20 shadow-lg">
     <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-3xl font-bold glow text-contrast">ΞXΞCS FORΞX</h1>
-      <div class="flex items-center space-x-6">
+        
+      <h1 class="text-3xl font-bold glow text-contrast">ΞXΞCS F<span class="globe-icon"></span>RΞX</h1>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" alt="Logo" class="nav-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg" alt="Logo" class="nav-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Circle_USDC_Logo.svg" alt="Logo" class="nav-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Tether_USDT.png" alt="Logo" class="nav-logo">
+
+    
+       <div class="flex items-center space-x-6">
+      <h1 class="text-3xl font-bold glow text-contrast">
         <a href="#home" class="text-lg nav-link text-contrast">Home</a>
         <a href="#plans" class="text-lg nav-link text-contrast">Plans</a>
         <a href="#about" class="text-lg nav-link text-contrast">About</a>
         <a href="#contact" class="text-lg nav-link text-contrast">Contact</a>
         <a href="dashboard.html" class="text-lg nav-link text-contrast" id="dashboard-link">Dashboard</a>
+    
         <span id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</span>
       </div>
     </div>
@@ -422,7 +492,7 @@
   <footer class="bg-gradient-to-r text-primary py-8">
     <div class="container mx-auto text-center px-4">
       <p class="text-lg">© 2025 Execs Forex. All rights reserved.</p>
-      <p class="mt-2">Domain: www.execsforex.com</p>
+      <p class="mt-2 text-contrast">Domain: <a href="http://www.execsforex.com" class="nav-link">www.execsforex.com</a></p>
     </div>
   </footer>
 

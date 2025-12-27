@@ -243,6 +243,36 @@
     .status-processing { color: #60a5fa; }
     .status-verified { color: #34d399; }
     .bg-gray-900 { background-color: var(--bg-gray-900, #111827); }
+@keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+   
+    }
+    nav .container {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+     nav {
+      background: linear-gradient(90deg, rgba(0,255,204,0.2), rgba(0,0,0,0.8));
+      height: 40px;
+      border-bottom: 2px solid rgba(0,255,255,0.5);
+      backdrop-filter: blur(10px);
+    }
+     a.nav-link:hover {
+      color: #00ffcc;
+    
+    }
+    .nav-logo {
+      height: 50px;
+      margin-right: 15px;
+      animation: spin 10s linear infinite, glowPulse 2s ease-in-out infinite; /* rotate + glow */
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { filter: drop-shadow(0 0 5px #00ffe0) drop-shadow(0 0 10px #00ffe0); }
+      50% { filter: drop-shadow(0 0 15px #00ffcc) drop-shadow(0 0 30px #00ffcc); }
+    }
   </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
@@ -268,11 +298,20 @@
       };
       document.head.appendChild(script);
     }
+
   </script>
+    <!-- Navigation -->
   <nav class="bg-gradient-to-r text-primary p-4 fixed w-full top-0 z-20 shadow-lg">
     <div class="container mx-auto flex justify-between items-center">
       <h1 class="text-3xl font-bold glow text-contrast">ΞXΞCS FORΞX</h1>
+       <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" alt="Logo" class="nav-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg" alt="Logo" class="nav-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Circle_USDC_Logo.svg" alt="Logo" class="nav-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Tether_USDT.png" alt="Logo" class="nav-logo">
+
       <div class="flex items-center space-x-6">
+
+        <h1 class="text-5xl font-bold glow text-contrast">
         <a href="index.html" class="text-lg nav-link text-contrast">Home</a>
         <a href="index.html#plans" class="text-lg nav-link text-contrast">Plans</a>
         <a href="index.html#about" class="text-lg nav-link text-contrast">About</a>
@@ -328,6 +367,8 @@
           </div>
         </div>
         <div id="verify-form" class="hidden flex flex-col space-y-3">
+                  <span id="verify-modal-close" class="modal-close">&times;</span>
+
           <h3 class="text-lg font-bold mb-2 text-contrast">Verify Your Account</h3>
           <div>
             <label for="verify-email" class="block text-base mb-1 text-contrast">Email</label>
@@ -344,8 +385,11 @@
           <button id="verify-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Verify Password</button>
           <div id="verify-error" class="hidden error-message text-contrast"></div>
         </div>
+
         <div id="login-form" class="hidden flex flex-col space-y-3">
-          <h3 class="text-lg font-bold mb-2 text-contrast">Log In to Your Account</h3>
+
+        <span id="login-modal-close" class="modal-close">&times;</span>
+         <h3 class="text-lg font-bold mb-2 text-contrast"> Log In to Your Account</h3>
           <div>
             <label for="login-email" class="block text-base mb-1 text-contrast">Email</label>
             <input type="email" id="login-email" class="w-full rounded-lg bg-input text-input input-field" required>
@@ -357,6 +401,7 @@
           <button id="login-btn" class="btn-primary px-6 py-3 rounded-full font-semibold">Login</button>
           <div id="login-error" class="hidden error-message text-contrast"></div>
         </div>
+
         <div id="2fa-form" class="hidden flex flex-col space-y-3">
           <h3 class="text-lg font-bold mb-2 text-contrast">Two-Factor Authentication</h3>
           <p class="text-sm text-secondary text-contrast">A 6-digit code has been sent to your email.</p>
@@ -390,7 +435,7 @@
             <h3 class="text-lg font-bold mb-2 text-contrast">Transaction History</h3>
             <div class="filter-container">
               <div>
-                <label for="sort-date" class="block text-sm mb-1 text-contrast">Sort by Date &nbsp</label>
+                <label for="sort-date" class="block text-sm mb-1 text-contrast">Sort by Date &nbsp&nbsp</label>
                 <select id="sort-date" class="filter-select">
                   <option value="desc">Newest First</option>
                   <option value="asc">Oldest First</option>
@@ -1173,7 +1218,7 @@
         }
       });
 
-      submitBtn.addEventListener('click', () => {
+ submitBtn.addEventListener('click', () => {
         try {
           const firstName = document.getElementById('firstName')?.value.trim();
           const lastName = document.getElementById('lastName')?.value.trim();
@@ -1405,6 +1450,7 @@
 
       exportCsvBtn.addEventListener('click', exportToCsv);
     });
+
   </script>
 
 <div id="roi" class="tab-content">
@@ -1436,5 +1482,26 @@
   }
 </script>
 
+<script>
+
+  // Close modal when (×) is clicked and go back to dashboard
+  document.getElementById("verify-modal-close").addEventListener("click", () => {
+    document.getElementById("verify-form").style.display = "none";
+    window.location.href = "dashboard.html";  // redirect on close
+
+  });
+
+</script>
+
+<script>
+
+  // Close modal when (×) is clicked and go back to dashboard
+  document.getElementById("login-modal-close").addEventListener("click", () => {
+    document.getElementById("login-form").style.display = "none";
+    window.location.href = "dashboard.html";  // redirect on close
+
+  });
+
+</script>
 </body>
 </html>
